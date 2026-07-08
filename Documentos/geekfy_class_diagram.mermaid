@@ -1,0 +1,143 @@
+classDiagram
+    direction TB
+
+    class User {
+        +String id
+        +String name
+        +String email
+        +String passwordHash
+        +Role role
+        +DateTime createdAt
+        +DateTime updatedAt
+    }
+
+    class Store {
+        +String id
+        +String slug
+        +String name
+        +String description
+        +String logoUrl
+        +String coverUrl
+        +String whatsapp
+        +String instagram
+        +String neighborhood
+        +String city
+        +Float latitude
+        +Float longitude
+        +StoreStatus status
+        +Int viewsCount
+        +DateTime createdAt
+        +DateTime updatedAt
+    }
+
+    class Category {
+        +String id
+        +String name
+        +String slug
+    }
+
+    class StoreCategory {
+        +String storeId
+        +String categoryId
+    }
+
+    class Product {
+        +String id
+        +String name
+        +String description
+        +Decimal price
+        +ProductStatus status
+        +Int viewsCount
+        +Vector embedding
+        +DateTime createdAt
+        +DateTime updatedAt
+    }
+
+    class ProductImage {
+        +String id
+        +String url
+        +Int order
+    }
+
+    class Tag {
+        +String id
+        +String name
+        +String slug
+        +String[] synonyms
+    }
+
+    class ProductTag {
+        +String productId
+        +String tagId
+    }
+
+    class Event {
+        +String id
+        +String name
+        +String description
+        +DateTime date
+        +String address
+        +String neighborhood
+        +Float latitude
+        +Float longitude
+        +DateTime createdAt
+        +DateTime updatedAt
+    }
+
+    class EventStore {
+        +String eventId
+        +String storeId
+        +Boolean confirmed
+    }
+
+    class SearchQuery {
+        +String id
+        +String query
+        +Int resultsCount
+        +DateTime createdAt
+    }
+
+    class Role {
+        <<enumeration>>
+        LOJISTA
+        ADMIN
+    }
+
+    class StoreStatus {
+        <<enumeration>>
+        PENDING
+        APPROVED
+        REJECTED
+        SUSPENDED
+    }
+
+    class ProductStatus {
+        <<enumeration>>
+        ACTIVE
+        INACTIVE
+    }
+
+    %% ---------------- Relacionamentos ----------------
+
+    User "1" -- "0..1" Store : possui
+    User ..> Role : usa
+
+    Store "1" -- "0..*" Product : oferece
+    Store "1" -- "0..*" StoreCategory : classificada em
+    Category "1" -- "0..*" StoreCategory : agrupa
+    Store ..> StoreStatus : usa
+
+    Product "1" -- "0..*" ProductImage : possui
+    Product "1" -- "0..*" ProductTag : marcado com
+    Tag "1" -- "0..*" ProductTag : aplicada em
+    Product ..> ProductStatus : usa
+
+    Store "1" -- "0..*" EventStore : participa de
+    Event "1" -- "0..*" EventStore : reúne
+
+    StoreCategory --> Store
+    StoreCategory --> Category
+    ProductTag --> Product
+    ProductTag --> Tag
+    EventStore --> Event
+    EventStore --> Store
