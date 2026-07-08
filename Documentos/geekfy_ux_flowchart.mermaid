@@ -1,0 +1,95 @@
+flowchart TD
+    Start([Usuário acessa o site]) --> Landing[Home / Vitrine]
+
+    %% ================= VISITANTE =================
+    subgraph VISITANTE["🧑‍🚀 Fluxo do Visitante"]
+        Landing --> Choice1{O que o visitante quer fazer?}
+
+        Choice1 -->|Buscar por fandom/tema| Search[Barra de busca:\nex. 'shinobi', 'RPG de mesa']
+        Choice1 -->|Ver lojas| StoreList[Listagem de lojas\ncom filtro por categoria]
+        Choice1 -->|Ver eventos| EventMap[Mapa de eventos geek]
+
+        Search --> SearchLoad[Sistema gera embedding\nda busca e compara\ncom produtos - RF06/RF07]
+        SearchLoad --> SearchResults{Encontrou resultados\nrelevantes?}
+        SearchResults -->|Sim| ResultsList[Lista de produtos:\nfoto, loja, preço]
+        SearchResults -->|Não| EmptyState[Estado vazio:\nsugestões de tags populares\ne link para listagem de lojas]
+        EmptyState --> StoreList
+
+        ResultsList --> FilterRefine[Filtros complementares:\ncategoria, preço, bairro - RF09]
+        FilterRefine --> ResultsList
+
+        StoreList --> StoreFilter[Filtro por categoria]
+        StoreFilter --> StorePage[Página da loja:\nnome, foto, categorias,\nWhatsApp/Instagram, produtos]
+
+        ResultsList --> ProductPage[Página do produto]
+        StorePage --> ProductPage
+
+        ProductPage --> ProductDetail[Foto, descrição,\npreço, tags de fandom]
+        ProductDetail --> ContactCTA{Visitante quer\ncomprar/saber mais?}
+        ContactCTA -->|Sim| WhatsAppRedirect[Botão 'Falar com a loja'\nabre WhatsApp com\nmensagem pré-preenchida]
+        ContactCTA -->|Ver mais produtos da loja| StorePage
+        WhatsAppRedirect --> ExternalDeal[Negociação e pagamento\nacontecem fora da plataforma]
+
+        EventMap --> EventFilter[Filtro: eventos\nfuturos vs. passados]
+        EventFilter --> EventMarker[Clica em marcador do evento]
+        EventMarker --> EventDetail[Detalhe do evento:\nnome, data, local,\nlojas confirmadas]
+        EventDetail --> StorePage
+    end
+
+    %% ================= LOJISTA =================
+    Landing --> LojistaEntry{É lojista?}
+    LojistaEntry -->|Quero cadastrar minha loja| SignupStart
+
+    subgraph LOJISTA["🏪 Fluxo do Lojista"]
+        SignupStart[Tela 'Cadastre sua loja'] --> CreateAccount[Cria conta:\ne-mail/senha ou magic link]
+        CreateAccount --> OnboardingChoice{Onboarding}
+        OnboardingChoice -->|Self-service| StoreForm[Preenche formulário:\nnome, descrição, logo,\ncategorias, WhatsApp,\nInstagram, bairro]
+        OnboardingChoice -->|Assistido pela equipe\nMVP - primeiras lojas| ManualOnboarding[Equipe ajuda a\npreencher e subir catálogo]
+
+        StoreForm --> ProductForm[Cadastra produtos:\nfoto, nome, preço,\ndescrição, tags de fandom]
+        ManualOnboarding --> ProductForm
+
+        ProductForm --> PendingStatus[Loja fica com status\n'Pendente de aprovação']
+        PendingStatus --> WaitApproval[Aguarda aprovação\ndo admin]
+
+        WaitApproval --> ApprovalResult{Admin aprovou?}
+        ApprovalResult -->|Sim| Notified[Lojista recebe notificação\npor e-mail]
+        ApprovalResult -->|Não| Rejected[Recebe motivo da rejeição\ne pode reenviar cadastro]
+        Rejected --> StoreForm
+
+        Notified --> Dashboard[Painel do lojista]
+        Dashboard --> DashActions{Ação no painel}
+        DashActions -->|Ver métricas| ViewMetrics[Views recebidas por\nloja e por produto - RF05]
+        DashActions -->|Editar loja| EditStore[Atualiza dados,\nfotos, contato]
+        DashActions -->|Gerenciar produtos| ManageProducts[Adiciona, edita\nou remove produtos]
+        ViewMetrics --> Dashboard
+        EditStore --> Dashboard
+        ManageProducts --> Dashboard
+    end
+
+    %% ================= ADMIN =================
+    subgraph ADMIN["🛠️ Fluxo do Admin"]
+        AdminLogin[Login no painel\nadministrativo interno] --> AdminPanel[Painel admin]
+        AdminPanel --> AdminActions{Ação}
+        AdminActions -->|Revisar cadastro de loja| ReviewStore[Analisa dados\nda loja pendente]
+        ReviewStore --> AdminDecision{Aprovar?}
+        AdminDecision -->|Sim| ApproveStore[Aprova loja\ne produtos]
+        AdminDecision -->|Não| RejectStore[Rejeita com motivo]
+        AdminActions -->|Moderar produtos| ModerateProducts[Remove/edita\nconteúdo impróprio]
+        AdminActions -->|Cadastrar evento| CreateEvent[Cadastra evento:\nnome, data, local\nno mapa]
+        AdminActions -->|Confirmar lojas no evento| LinkStoresEvent[Vincula lojas\nparticipantes ao evento]
+        AdminActions -->|Gerenciar categorias/tags| ManageTaxonomy[Cria/edita categorias\ne tags de fandom]
+
+        ApproveStore -.-> ApprovalResult
+        RejectStore -.-> ApprovalResult
+        CreateEvent --> EventMap
+        LinkStoresEvent --> EventDetail
+    end
+
+    classDef visitante fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    classDef lojista fill:#dcfce7,stroke:#16a34a,color:#14532d
+    classDef admin fill:#fef3c7,stroke:#d97706,color:#78350f
+
+    class VISITANTE visitante
+    class LOJISTA lojista
+    class ADMIN admin
