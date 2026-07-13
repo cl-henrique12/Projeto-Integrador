@@ -6,26 +6,62 @@ interface StoreCarouselProps {
   stores: Pick<Store, "id" | "slug" | "name" | "logoUrl">[];
 }
 
+// Fallback de avatar com inicial da loja — substitui alt text vazando
+function StoreAvatarFallback({ name }: { name: string }) {
+  return (
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "linear-gradient(135deg, var(--color-mauve), var(--color-blushpop))",
+      }}
+      aria-hidden
+    >
+      <span
+        style={{
+          fontFamily: "var(--font-display)",
+          fontWeight: 900,
+          fontSize: "2rem",
+          color: "var(--color-text-primary)",
+          lineHeight: 1,
+          userSelect: "none",
+        }}
+      >
+        {name.charAt(0).toUpperCase()}
+      </span>
+    </div>
+  );
+}
+
 // design-system §3.4: "Avatares circulares em linha horizontal, com nome/logo de cada loja"
-// "Deve ser dinâmico (puxar da tabela Store via API/Prisma), não hardcoded"
+// Tamanho 100px fiel ao Figma — "Deve ser dinâmico (puxar da tabela Store via API/Prisma), não hardcoded"
 export default function StoreCarousel({ stores }: StoreCarouselProps) {
   if (stores.length === 0) {
     return null;
   }
 
   return (
-    <section className="py-8 bg-base" aria-labelledby="parceiras-heading">
-      <div className="max-w-7xl mx-auto px-4">
+    <section className="py-10 bg-base border-b border-lavendergrey/10" aria-labelledby="parceiras-heading">
+      <div className="max-w-7xl mx-auto px-6">
         <h2
           id="parceiras-heading"
-          className="font-display font-bold text-xl text-text-primary mb-5"
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 700,
+            fontSize: "1.25rem",
+            color: "var(--color-text-primary)",
+            marginBottom: "1.75rem",
+          }}
         >
           Lojas Parceiras
         </h2>
 
-        {/* Scroll horizontal com avatares circulares */}
+        {/* Scroll horizontal com avatares circulares — gap e tamanho fiéis ao Figma */}
         <div
-          className="flex gap-6 overflow-x-auto pb-3 scrollbar-hide"
+          className="flex gap-9 overflow-x-auto pb-3 scrollbar-hide"
           role="list"
           aria-label="Lojas parceiras"
         >
@@ -33,31 +69,58 @@ export default function StoreCarousel({ stores }: StoreCarouselProps) {
             <Link
               key={store.id}
               href={`/lojas/${store.slug}`}
-              className="flex flex-col items-center gap-2 flex-shrink-0 group"
+              className="flex flex-col items-center gap-3 flex-shrink-0 group"
               role="listitem"
               aria-label={`Ver loja ${store.name}`}
             >
-              {/* Avatar circular */}
-              <div className="w-20 h-20 rounded-full overflow-hidden border-4 border-transparent group-hover:border-mauve transition-all shadow-md group-hover:shadow-lg group-hover:scale-105 transform bg-aquamarine/30">
+              {/* Avatar circular 100×100 — fiel ao Figma
+                  overflow-hidden garante que o alt text nunca estoure o círculo */}
+              <div
+                style={{
+                  width: 100,
+                  height: 100,
+                  borderRadius: "50%",
+                  overflow: "hidden",
+                  border: "4px solid transparent",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.10)",
+                  flexShrink: 0,
+                  position: "relative",
+                  background: "linear-gradient(135deg, rgba(142,248,213,0.4), rgba(211,188,255,0.3))",
+                  transition: "border-color 0.3s, box-shadow 0.3s, transform 0.3s",
+                }}
+                className="group-hover:scale-105"
+              >
                 {store.logoUrl ? (
                   <Image
                     src={store.logoUrl}
                     alt={`Logo da loja ${store.name}`}
-                    width={80}
-                    height={80}
-                    className="w-full h-full object-cover"
+                    width={100}
+                    height={100}
+                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-mauve to-blushpop">
-                    <span className="font-display font-black text-xl text-text-primary">
-                      {store.name.charAt(0).toUpperCase()}
-                    </span>
-                  </div>
+                  <StoreAvatarFallback name={store.name} />
                 )}
               </div>
 
               {/* Nome da loja */}
-              <span className="text-xs font-sans font-medium text-text-primary text-center max-w-[80px] leading-tight group-hover:text-mauve transition-colors line-clamp-2">
+              <span
+                style={{
+                  fontSize: "0.75rem",
+                  fontFamily: "var(--font-sans)",
+                  fontWeight: 600,
+                  color: "var(--color-text-primary)",
+                  textAlign: "center",
+                  maxWidth: 100,
+                  lineHeight: 1.3,
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                  transition: "color 0.2s",
+                }}
+                className="group-hover:text-lavendergrey"
+              >
                 {store.name}
               </span>
             </Link>

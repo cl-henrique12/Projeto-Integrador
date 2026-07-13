@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 // Ícones SVG inline (Heroicons)
-// Pendência design-system §5: substituir pelos SVGs exportados do Figma
 function HeartIcon() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor" className="w-6 h-6">
@@ -51,33 +50,118 @@ export default function Header() {
 
   return (
     // Fundo blushpop — design-system §3.1 "Fundo em --color-accent-2 (Blush Pop)"
-    <header className="bg-blushpop sticky top-0 z-50 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4">
-
-        {/* Logo circular à esquerda */}
-        <Link href="/" className="flex-shrink-0" aria-label="Geekfy — página inicial">
-          <div className="w-12 h-12 rounded-full bg-mauve flex items-center justify-center shadow-md hover:scale-105 transition-transform">
-            <span className="font-display font-black text-text-primary text-sm leading-none text-center select-none">
+    <header
+      style={{
+        backgroundColor: "var(--color-blushpop)",
+        position: "sticky",
+        top: 0,
+        zIndex: 50,
+        boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: "80rem",
+          margin: "0 auto",
+          padding: "0 1.5rem",
+          height: "72px",
+          display: "flex",
+          alignItems: "center",
+          gap: "1rem",
+        }}
+      >
+        {/* Logo + Nome à esquerda */}
+        <Link
+          href="/"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.75rem",
+            flexShrink: 0,
+            textDecoration: "none",
+          }}
+          aria-label="Geekfy — página inicial"
+        >
+          <div
+            style={{
+              width: "2.75rem",
+              height: "2.75rem",
+              borderRadius: "50%",
+              backgroundColor: "var(--color-text-primary)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0 4px 12px rgba(26,26,46,0.25)",
+            }}
+            className="animate-pulse-glow"
+          >
+            <span
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 900,
+                color: "var(--color-blushpop)",
+                fontSize: "0.7rem",
+                letterSpacing: "-0.03em",
+                userSelect: "none",
+              }}
+            >
               GKF
             </span>
           </div>
+          <span
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 900,
+              color: "var(--color-text-primary)",
+              fontSize: "1.25rem",
+              letterSpacing: "-0.02em",
+            }}
+            className="hidden sm:block"
+          >
+            Geekfy
+          </span>
         </Link>
 
-        {/* Barra de busca central */}
-        <form onSubmit={handleSearch} className="flex-1 max-w-xl mx-auto">
-          <div className="relative">
+        {/* Barra de busca central — fiel ao Figma: retângulo branco com bordas 8px */}
+        <form onSubmit={handleSearch} style={{ flex: 1, maxWidth: "42rem", margin: "0 auto" }}>
+          <div style={{ position: "relative" }}>
             <input
               id="search-input"
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Pesquise por tema ou loja"
-              className="w-full pl-4 pr-12 py-2.5 rounded-full border-2 border-transparent bg-white/80 backdrop-blur-sm text-text-primary placeholder-lavendergrey text-sm font-sans focus:outline-none focus:border-mauve focus:bg-white transition-all shadow-sm"
-              aria-label="Buscar por tema ou loja"
+              placeholder="Pesquise por lojas ou tema"
+              style={{
+                width: "100%",
+                paddingLeft: "1.25rem",
+                paddingRight: "3rem",
+                paddingTop: "0.75rem",
+                paddingBottom: "0.75rem",
+                borderRadius: "0.5rem",
+                border: "none",
+                backgroundColor: "#ffffff",
+                color: "var(--color-text-primary)",
+                fontSize: "0.875rem",
+                fontFamily: "var(--font-sans)",
+                outline: "none",
+                boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+              }}
+              aria-label="Buscar por lojas ou tema"
             />
             <button
               type="submit"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-lavendergrey hover:text-mauve transition-colors"
+              style={{
+                position: "absolute",
+                right: "1rem",
+                top: "50%",
+                transform: "translateY(-50%)",
+                color: "var(--color-lavendergrey)",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: 0,
+                display: "flex",
+              }}
               aria-label="Pesquisar"
             >
               <SearchIcon />
@@ -85,18 +169,45 @@ export default function Header() {
           </div>
         </form>
 
-        {/* Ícones à direita */}
-        <nav className="flex items-center gap-3 flex-shrink-0" aria-label="Ações do usuário">
+        {/* Ícones à direita — design-system §3.1 */}
+        <nav
+          style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexShrink: 0 }}
+          aria-label="Ações do usuário"
+        >
           <button
             id="btn-favoritos"
-            className="text-text-primary hover:text-mauve transition-colors hover:scale-110 transform"
+            style={{
+              width: "2.25rem",
+              height: "2.25rem",
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "var(--color-text-primary)",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              transition: "all 0.2s",
+            }}
             aria-label="Favoritos"
           >
             <HeartIcon />
           </button>
           <button
             id="btn-carrinho"
-            className="text-text-primary hover:text-mauve transition-colors hover:scale-110 transform"
+            style={{
+              width: "2.25rem",
+              height: "2.25rem",
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "var(--color-text-primary)",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              transition: "all 0.2s",
+            }}
             aria-label="Carrinho"
           >
             <BagIcon />
@@ -104,7 +215,17 @@ export default function Header() {
           <Link
             href="/login"
             id="btn-perfil"
-            className="text-text-primary hover:text-mauve transition-colors hover:scale-110 transform"
+            style={{
+              width: "2.25rem",
+              height: "2.25rem",
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "var(--color-text-primary)",
+              textDecoration: "none",
+              transition: "all 0.2s",
+            }}
             aria-label="Perfil / Login"
           >
             <UserIcon />

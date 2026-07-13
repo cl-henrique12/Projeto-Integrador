@@ -1,35 +1,41 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Image from "next/image";
 import Link from "next/link";
 
 // Slides do banner hero — design-system §3.3
-// Em produção: alimentar via CMS/banco. Por ora: slides estáticos com paleta do design-system.
+// Altura reduzida para 320px (era 516px) + fundo branco dominante (design-system §1.2 regra 60-30-10)
+// A cor de destaque aparece como barra lateral e elemento decorativo pontual, não como fundo total
 const SLIDES = [
   {
     id: 1,
-    bg: "bg-gradient-to-r from-mauve via-blushpop to-aquamarine",
+    accentColor: "#D3BCFF", // mauve
+    accentColorLight: "rgba(211,188,255,0.15)",
+    dotColor: "#D3BCFF",
     title: "Geekfy chegou em Manaus!",
     subtitle: "Descubra as melhores lojas geek da cidade em um só lugar",
-    cta: { label: "Explorar lojas", href: "/lojas" },
-    imageUrl: null,
+    cta: { label: "Explorar lojas →", href: "/lojas" },
+    emoji: "🎮",
   },
   {
     id: 2,
-    bg: "bg-gradient-to-r from-aquamarine via-mauve to-blushpop",
+    accentColor: "#8EF8D5", // aquamarine
+    accentColorLight: "rgba(142,248,213,0.15)",
+    dotColor: "#8EF8D5",
     title: "Busca por fandom",
     subtitle: "Pesquise por \"shinobi\", \"RPG de mesa\" e muito mais — nossa IA entende o que você procura",
-    cta: { label: "Pesquisar agora", href: "/busca" },
-    imageUrl: null,
+    cta: { label: "Pesquisar agora →", href: "/busca" },
+    emoji: "🔍",
   },
   {
     id: 3,
-    bg: "bg-gradient-to-r from-blushpop via-aquamarine to-mauve",
+    accentColor: "#FFBFEA", // blushpop
+    accentColorLight: "rgba(255,191,234,0.15)",
+    dotColor: "#FFBFEA",
     title: "Cadastre sua loja",
     subtitle: "Lojista geek? Apareça para milhares de consumidores em Manaus. Grátis no MVP!",
-    cta: { label: "Cadastrar minha loja", href: "/cadastro" },
-    imageUrl: null,
+    cta: { label: "Cadastrar minha loja →", href: "/cadastro" },
+    emoji: "🏪",
   },
 ];
 
@@ -68,13 +74,17 @@ export default function HeroBanner() {
     return () => clearInterval(id);
   }, [next, paused]);
 
-  const slide = SLIDES[current];
-
   return (
-    // design-system §3.3 "Imagem/destaque de campanha em largura total"
+    // Design-system §1.2 regra 60-30-10:
+    // Fundo branco (60%) domina; cor de destaque aparece em barra lateral pontual (30%)
+    // Altura reduzida de 516px → 320px para que o banner não monopolize a tela
     <section
-      className="relative overflow-hidden"
-      style={{ height: "360px" }}
+      style={{
+        position: "relative",
+        overflow: "hidden",
+        height: "320px",
+        backgroundColor: "var(--color-base)",
+      }}
       aria-label="Banner de destaque"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
@@ -83,20 +93,111 @@ export default function HeroBanner() {
       {SLIDES.map((s, i) => (
         <div
           key={s.id}
-          className={`absolute inset-0 transition-opacity duration-700 ${s.bg} flex items-center ${i === current ? "opacity-100 z-10" : "opacity-0 z-0"}`}
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            alignItems: "center",
+            opacity: i === current ? 1 : 0,
+            transform: i === current ? "translateX(0)" : i < current ? "translateX(-100%)" : "translateX(100%)",
+            transition: "opacity 0.7s ease, transform 0.7s ease",
+            zIndex: i === current ? 10 : 0,
+            backgroundColor: "var(--color-base)", // fundo branco dominante
+          }}
           aria-hidden={i !== current}
         >
-          <div className="max-w-7xl mx-auto px-8 py-12 w-full">
-            <div className="max-w-lg animate-fade-in-up">
-              <h1 className="font-display font-black text-4xl md:text-5xl text-text-primary leading-tight mb-3">
+          {/* Barra de destaque pontual à esquerda — cor de acento em bloco contido */}
+          <div
+            style={{
+              position: "absolute",
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: "6px",
+              backgroundColor: s.accentColor,
+            }}
+          />
+
+          {/* Decoração de fundo — círculo grande, muito sutil */}
+          <div
+            style={{
+              position: "absolute",
+              right: "-80px",
+              top: "-80px",
+              width: "420px",
+              height: "420px",
+              borderRadius: "50%",
+              backgroundColor: s.accentColorLight,
+              pointerEvents: "none",
+            }}
+          />
+
+          {/* Emoji decorativo lado direito — elemento pontual de destaque */}
+          <div
+            style={{
+              position: "absolute",
+              right: "10%",
+              top: "50%",
+              transform: "translateY(-50%)",
+              fontSize: "7rem",
+              opacity: 0.18,
+              pointerEvents: "none",
+              userSelect: "none",
+            }}
+            role="img"
+            aria-hidden
+          >
+            {s.emoji}
+          </div>
+
+          {/* Conteúdo principal */}
+          <div
+            style={{ maxWidth: "80rem", margin: "0 auto", padding: "0 2.5rem", width: "100%", position: "relative" }}
+          >
+            <div style={{ maxWidth: "36rem" }} className="animate-fade-in-up">
+              {/* Emoji visível em tamanho menor */}
+              <div style={{ fontSize: "2.5rem", marginBottom: "0.75rem", userSelect: "none" }} role="img" aria-hidden>
+                {s.emoji}
+              </div>
+
+              <h1
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 900,
+                  fontSize: "clamp(1.75rem, 3vw, 2.25rem)",
+                  color: "var(--color-text-primary)",
+                  lineHeight: 1.2,
+                  marginBottom: "0.75rem",
+                  letterSpacing: "-0.02em",
+                }}
+              >
                 {s.title}
               </h1>
-              <p className="text-text-primary/80 text-base md:text-lg mb-6 font-sans">
+              <p
+                style={{
+                  color: "rgba(26,26,46,0.65)",
+                  fontSize: "1rem",
+                  marginBottom: "1.5rem",
+                  fontFamily: "var(--font-sans)",
+                  lineHeight: 1.6,
+                }}
+              >
                 {s.subtitle}
               </p>
               <Link
                 href={s.cta.href}
-                className="inline-block bg-text-primary text-white px-6 py-3 rounded-full font-semibold text-sm hover:bg-mauve hover:text-text-primary transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 transform"
+                style={{
+                  display: "inline-block",
+                  backgroundColor: "var(--color-text-primary)",
+                  color: "#ffffff",
+                  padding: "0.75rem 2rem",
+                  borderRadius: "0.75rem",
+                  fontWeight: 600,
+                  fontSize: "0.9rem",
+                  fontFamily: "var(--font-sans)",
+                  boxShadow: "0 4px 14px rgba(26,26,46,0.2)",
+                  transition: "all 0.2s",
+                }}
               >
                 {s.cta.label}
               </Link>
@@ -105,24 +206,66 @@ export default function HeroBanner() {
         </div>
       ))}
 
-      {/* Botões de navegação */}
+      {/* Botão anterior */}
       <button
         onClick={prev}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/70 hover:bg-white backdrop-blur-sm rounded-full p-2 shadow-md transition-all hover:scale-110"
+        style={{
+          position: "absolute",
+          left: "1.25rem",
+          top: "50%",
+          transform: "translateY(-50%)",
+          zIndex: 20,
+          background: "rgba(255,255,255,0.85)",
+          backdropFilter: "blur(4px)",
+          borderRadius: "50%",
+          padding: "0.625rem",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.12)",
+          border: "none",
+          cursor: "pointer",
+          transition: "all 0.2s",
+        }}
         aria-label="Slide anterior"
       >
         <ChevronLeft />
       </button>
+
+      {/* Botão próximo */}
       <button
         onClick={next}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/70 hover:bg-white backdrop-blur-sm rounded-full p-2 shadow-md transition-all hover:scale-110"
+        style={{
+          position: "absolute",
+          right: "1.25rem",
+          top: "50%",
+          transform: "translateY(-50%)",
+          zIndex: 20,
+          background: "rgba(255,255,255,0.85)",
+          backdropFilter: "blur(4px)",
+          borderRadius: "50%",
+          padding: "0.625rem",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.12)",
+          border: "none",
+          cursor: "pointer",
+          transition: "all 0.2s",
+        }}
         aria-label="Próximo slide"
       >
         <ChevronRight />
       </button>
 
-      {/* Dots — design-system §3.3 "Indicadores de slide (dots) na parte inferior" */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2" role="tablist" aria-label="Slides">
+      {/* Dots — design-system §3.3 */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "1.25rem",
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 20,
+          display: "flex",
+          gap: "0.5rem",
+        }}
+        role="tablist"
+        aria-label="Slides"
+      >
         {SLIDES.map((s, i) => (
           <button
             key={s.id}
@@ -130,7 +273,15 @@ export default function HeroBanner() {
             aria-selected={i === current}
             aria-label={`Slide ${i + 1}`}
             onClick={() => setCurrent(i)}
-            className={`h-2 rounded-full transition-all duration-300 ${i === current ? "w-8 bg-text-primary" : "w-2 bg-text-primary/40 hover:bg-text-primary/60"}`}
+            style={{
+              height: "0.625rem",
+              width: i === current ? "2.5rem" : "0.625rem",
+              borderRadius: "999px",
+              backgroundColor: i === current ? "var(--color-text-primary)" : "rgba(26,26,46,0.25)",
+              border: "none",
+              cursor: "pointer",
+              transition: "all 0.3s",
+            }}
           />
         ))}
       </div>

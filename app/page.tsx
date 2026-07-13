@@ -33,7 +33,7 @@ export default async function HomePage() {
   });
 
   return (
-    <main>
+    <main style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       {/* 1. Header — design-system §3.1 */}
       <Header />
 
@@ -47,19 +47,136 @@ export default async function HomePage() {
       <StoreCarousel stores={lojas} />
 
       {/* Divisor */}
-      <div className="h-px bg-lavendergrey/10 mx-8" />
+      <div
+        style={{
+          height: "1px",
+          backgroundColor: "rgba(135,134,168,0.10)",
+          margin: "0 2rem",
+        }}
+      />
 
       {/* 5. Grid de produtos/destaques — design-system §3.5 */}
-      <ProductGrid products={produtos} />
+      <div style={{ flex: 1 }}>
+        <ProductGrid products={produtos} />
+      </div>
 
-      {/* Footer simples */}
-      <footer className="bg-blushpop/30 border-t border-lavendergrey/10 mt-12 py-8">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-lavendergrey font-sans">
-          <p>© 2026 Geekfy — Todos os direitos reservados</p>
-          <div className="flex gap-6">
-            <Link href="/lojas" className="hover:text-text-primary transition-colors">Lojas</Link>
-            <Link href="/cadastro" className="hover:text-text-primary transition-colors">Cadastre sua loja</Link>
-            <Link href="/admin" className="hover:text-text-primary transition-colors">Admin</Link>
+      {/* Footer — design-system §3.6
+          Fundo lavendergrey (#8786A8), texto branco, parte do fluxo normal da página */}
+      <footer
+        style={{
+          backgroundColor: "var(--color-lavendergrey)",
+          marginTop: 0,
+        }}
+      >
+        <div
+          style={{
+            maxWidth: "80rem",
+            margin: "0 auto",
+            padding: "2.5rem 1.5rem",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: "1.5rem",
+              flexWrap: "wrap",
+            }}
+          >
+            {/* Brand */}
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+              <div
+                style={{
+                  width: "2rem",
+                  height: "2rem",
+                  borderRadius: "50%",
+                  backgroundColor: "rgba(255,255,255,0.2)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontWeight: 900,
+                    color: "#ffffff",
+                    fontSize: "0.7rem",
+                  }}
+                >
+                  GKF
+                </span>
+              </div>
+              <span
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 700,
+                  color: "#ffffff",
+                  fontSize: "1.125rem",
+                }}
+              >
+                Geekfy
+              </span>
+            </div>
+
+            {/* Links — fiéis ao Figma: Lojas, Cadastre sua loja, Admin */}
+            <nav
+              style={{ display: "flex", flexWrap: "wrap", gap: "1.5rem", justifyContent: "center" }}
+              aria-label="Links do rodapé"
+            >
+              <Link
+                href="/lojas"
+                style={{
+                  color: "#ffffff",
+                  fontWeight: 600,
+                  fontSize: "0.875rem",
+                  fontFamily: "var(--font-sans)",
+                  textDecoration: "none",
+                  transition: "color 0.2s",
+                }}
+              >
+                Lojas
+              </Link>
+              <Link
+                href="/cadastro"
+                style={{
+                  color: "#ffffff",
+                  fontWeight: 600,
+                  fontSize: "0.875rem",
+                  fontFamily: "var(--font-sans)",
+                  textDecoration: "none",
+                  transition: "color 0.2s",
+                }}
+              >
+                Cadastre sua loja
+              </Link>
+              <Link
+                href="/admin"
+                style={{
+                  color: "#ffffff",
+                  fontWeight: 600,
+                  fontSize: "0.875rem",
+                  fontFamily: "var(--font-sans)",
+                  textDecoration: "none",
+                  transition: "color 0.2s",
+                }}
+              >
+                Admin
+              </Link>
+            </nav>
+
+            {/* Copyright */}
+            <p
+              style={{
+                color: "rgba(255,255,255,0.7)",
+                fontSize: "0.75rem",
+                fontFamily: "var(--font-sans)",
+              }}
+            >
+              © 2026 Geekfy — Todos os direitos reservados
+            </p>
           </div>
         </div>
       </footer>
