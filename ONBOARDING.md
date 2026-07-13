@@ -231,6 +231,46 @@ Para imagens estáticas que fazem parte do layout do site (não do banco), coloq
 
 ---
 
+### Tarefa 5: Ajustar o tamanho (altura) da barra de categorias
+
+A barra de navegação por categoria (`app/components/CategoryNav.tsx`) fica logo abaixo do cabeçalho. Sua altura é controlada por dois valores de `padding` — não há uma propriedade `height` fixa — então para torná-la mais compacta ou mais espaçosa, ajuste esses dois números:
+
+**Onde mexer — dentro de `CategoryNavInner`, no elemento `<ul>`:**
+
+| Propriedade | O que controla | Valor padrão | Mais compacto | Mais espaçoso |
+|---|---|---|---|---|
+| `paddingTop` | Espaço acima dos itens | `"0.25rem"` | `"0.125rem"` | `"0.75rem"` |
+| `paddingBottom` | Espaço abaixo dos itens | `"0.25rem"` | `"0.125rem"` | `"0.75rem"` |
+
+Além disso, o `padding` interno de cada link (o espaço dentro de cada botão arredondado) está na propriedade `padding` do `<Link>` dentro do `map`:
+
+| Propriedade | Valor padrão | Mais compacto | Mais espaçoso |
+|---|---|---|---|
+| `padding` do link | `"0.375rem 1rem"` | `"0.25rem 0.75rem"` | `"0.625rem 1.5rem"` |
+
+**Exemplo prático — tornar a barra ainda mais fina:**
+
+1. Abra `app/components/CategoryNav.tsx`
+2. No elemento `<ul>` (por volta da linha 48), altere:
+   ```diff
+   - paddingTop: "0.25rem",
+   - paddingBottom: "0.25rem",
+   + paddingTop: "0.125rem",
+   + paddingBottom: "0.125rem",
+   ```
+3. No `<Link>` dentro do `.map()` (por volta da linha 64), altere:
+   ```diff
+   - padding: "0.375rem 1rem",
+   + padding: "0.25rem 0.75rem",
+   ```
+4. Salve e veja a mudança instantânea no navegador
+
+> **Dica:** 1rem = 16px. Então `0.25rem` = 4px e `0.5rem` = 8px. Pense nos valores como "pixels divididos por 16".
+
+> **Atenção:** o `Suspense` no mesmo arquivo tem um `height: "36px"` no `fallback` (esqueleto de carregamento). Se mudar muito o padding, ajuste esse valor também para que não haja salto visual ao carregar a página.
+
+---
+
 ## 6. Zonas de Risco
 
 As áreas abaixo exigem cuidado redobrado. Uma edição errada pode derrubar o site ou causar perda de dados. **Peça ajuda antes de mexer nessas áreas sem ter certeza do que está fazendo.**
@@ -334,3 +374,92 @@ Abre uma interface visual no navegador para ver e editar os registros do banco d
 | **Slug** | Uma versão "amigável para URL" do nome de algo. Por exemplo, a loja "Universo Geek" teria o slug `universo-geek` e seria acessada em `/lojas/universo-geek`. |
 | **Embedding** | Representação numérica de um texto, gerada por IA. O projeto tem infraestrutura para guardar embeddings dos produtos (campo `embedding` na tabela `products`) para permitir busca por similaridade semântica. Esta funcionalidade ainda **não está ativa**, pois requer a variável `OPENAI_API_KEY` configurada. |
 | **Status da loja** | Cada loja tem um estado: `PENDING` (cadastrada, aguardando aprovação), `APPROVED` (visível na vitrine), `REJECTED` (reprovada pelo admin) ou `SUSPENDED` (suspensa). Somente lojas `APPROVED` aparecem para os visitantes do site. |
+
+---
+
+## 9. Resolução de Problemas Comuns
+
+### Problema: "Can't reach database server" ao rodar `npm run dev`
+
+Erro completo que aparece no terminal:
+
+```
+PrismaClientInitializationError: Can't reach database server at
+`db.bqownmtgukslunzvycuv.supabase.co:5432`
+```
+
+Esse erro significa que o código conseguiu ler as variáveis de ambiente corretamente, mas **não conseguiu abrir uma conexão TCP com o banco de dados**. As causas mais comuns são:
+
+#### Causa 1 — Projeto Supabase pausado (mais comum)
+
+O Supabase **pausa automaticamente projetos no plano gratuito** após aproximadamente 1 semana sem nenhuma requisição ao banco. Quando pausado, a porta `5432` fica completamente inacessível.
+
+**Como resolver:**
+1. Acesse o dashboard: https://supabase.com/dashboard/project/bqownmtgukslunzvycuv
+2. Se aparecer a mensagem **"Your project is paused"**, clique em **"Restore project"**
+3. Aguarde 1 a 3 minutos enquanto o Supabase reinicia o banco
+4. Acesse `http://localhost:3000` novamente — o erro deve desaparecer
+
+> **Dica:** Após restaurar, o Supabase fica ativo por mais 1 semana a cada vez que o banco recebe uma requisição. Durante o desenvolvimento, qualquer `npm run dev` com acesso ao banco já conta como uso.
+
+#### Causa 2 — Porta 5432 bloqueada pela rede local
+
+Algumas redes (especialmente redes de universidades ou empresas) bloqueiam conexões de saída na porta `5432`. O Supabase oferece um **pooler de conexões** na porta `6543` que é mais permissiva e recomendada para aplicações Next.js.
+
+**Como resolver — atualizar o `.env`:**
+
+```
+# DATABASE_URL: via pooler Supabase (porta 6543) — recomendado para runtime
+DATABASE_URL="postgresql://postgres:SUA_SENHA@db.bqownmtgukslunzvycuv.supabase.co:6543/postgres?pgbouncer=true"
+
+# DIRECT_URL: conexão direta (porta 5432) — usada APENAS pelo prisma migrate
+DIRECT_URL="postgresql://postgres:SUA_SENHA@db.bqownmtgukslunzvycuv.supabase.co:5432/postgres"
+```
+
+> **Por que dois URLs?** O `DATABASE_URL` com `pgbouncer=true` é o que o Prisma usa para todas as queries do site (mais estável). O `DIRECT_URL` é o que o Prisma usa **somente** quando você roda `npm run db:migrate` — migrações precisam de uma conexão direta sem pooler.
+
+As URLs e a senha exatas para o seu ambiente estão em **Supabase → Project Settings → Database → Connection string**. Selecione **"Transaction mode"** para obter a URL com pooler (porta 6543).
+
+#### Causa 3 — Arquivo `.env` incorreto ou ausente
+
+Verifique se o arquivo `.env` (na raiz do projeto, mesmo nível do `package.json`) existe e contém as quatro variáveis:
+
+```
+DATABASE_URL="..."
+DIRECT_URL="..."
+NEXT_PUBLIC_SUPABASE_URL="..."
+NEXT_PUBLIC_SUPABASE_ANON_KEY="..."
+```
+
+Se alguma estiver faltando, peça ao responsável pelo projeto. O Next.js lê o `.env` automaticamente — **não é necessário criar `.env.local`** neste projeto, pois o `.env` já está configurado.
+
+---
+
+### Problema: Imagens com erro `dangerouslyAllowSVG is disabled`
+
+Erro que aparece no terminal durante desenvolvimento:
+
+```
+The requested resource "https://placehold.co/..." has type "image/svg+xml"
+but dangerouslyAllowSVG is disabled.
+```
+
+Isso acontece porque o serviço `placehold.co` retorna imagens no formato SVG, e o componente `<Image>` do Next.js bloqueia SVGs externos por segurança.
+
+**Como resolver — duas opções:**
+
+**Opção A (mais simples):** Adicione `unoptimized` no componente `<Image>` específico que exibe a imagem:
+```tsx
+<Image src={logoUrl} alt={name} unoptimized />
+```
+
+**Opção B (global):** Habilite SVGs externos no `next.config.ts`:
+```ts
+images: {
+  dangerouslyAllowSVG: true,
+  contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+  remotePatterns: [ /* ... padrões existentes ... */ ],
+}
+```
+
+> **Atenção:** a Opção B é global e afeta todas as imagens do site. Use com cuidado — SVGs externos podem conter scripts maliciosos. Para desenvolvimento com dados fictícios do `seed.ts`, a Opção A é mais segura.

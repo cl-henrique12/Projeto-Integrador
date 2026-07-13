@@ -45,8 +45,8 @@ function CategoryNavInner() {
           justifyContent: "center",
           gap: "0.5rem",          // gap-2 — espaçamento visível entre itens
           overflowX: "auto",
-          paddingTop: "0.5rem",
-          paddingBottom: "0.5rem",
+          paddingTop: "0.25rem",    // reduzido de 0.5rem → barra mais compacta
+          paddingBottom: "0.25rem",
           listStyle: "none",
           scrollbarWidth: "none",
           msOverflowStyle: "none",
@@ -61,7 +61,7 @@ function CategoryNavInner() {
                 href={cat.href}
                 style={{
                   position: "relative",
-                  padding: "0.5rem 1.25rem",
+                  padding: "0.375rem 1rem", // reduzido de 0.5rem 1.25rem → mais compacto
                   borderRadius: "9999px",
                   fontSize: "0.875rem",
                   fontFamily: "var(--font-sans)",
@@ -119,7 +119,7 @@ export default function CategoryNav() {
             alignItems: "center",
             justifyContent: "center",
             gap: "0.5rem",
-            height: "44px",
+            height: "36px", // altura do skeleton ajustada junto com o padding
           }}
         />
       </nav>
