@@ -152,7 +152,7 @@ export default function HeroBanner() {
 
           {/* Conteúdo principal */}
           <div
-            style={{ maxWidth: "80rem", margin: "0 auto", padding: "0 2.5rem", width: "100%", position: "relative" }}
+            style={{ maxWidth: "80rem", margin: "0 auto", padding: "0 2rem", width: "100%", position: "relative" }}
           >
             <div style={{ maxWidth: "36rem" }} className="animate-fade-in-up">
               {/* Emoji visível em tamanho menor */}

@@ -38,7 +38,7 @@ export default async function AdminPage() {
     <main className="min-h-screen bg-gradient-to-br from-mauve/10 via-base to-blushpop/10">
       {/* Header admin */}
       <header className="bg-mauve shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+        <div className="page-container py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link href="/" className="font-display font-black text-lg text-text-primary">Geekfy</Link>
             <span className="px-2 py-0.5 bg-text-primary/10 rounded-full text-xs font-bold text-text-primary">Admin</span>
@@ -47,7 +47,7 @@ export default async function AdminPage() {
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-4 py-10">
+      <div className="page-container py-10">
         <h1 className="font-display font-black text-2xl text-text-primary mb-2">Painel Administrativo</h1>
         <p className="text-lavendergrey text-sm font-sans mb-8">Gerencie lojas, produtos e conteúdo da plataforma.</p>
 

@@ -57,7 +57,7 @@ export default function ProductGrid({ products }: ProductGridProps) {
   if (products.length === 0) {
     return (
       <section className="section-gap bg-base" aria-labelledby="produtos-heading">
-        <div className="max-w-7xl mx-auto px-6 text-center py-16">
+        <div className="page-container text-center py-16">
           <p
             style={{
               color: "var(--color-lavendergrey)",
@@ -73,7 +73,7 @@ export default function ProductGrid({ products }: ProductGridProps) {
 
   return (
     <section className="section-gap bg-base" aria-labelledby="produtos-heading">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="page-container">
         <h2
           id="produtos-heading"
           style={{

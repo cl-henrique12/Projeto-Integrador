@@ -7,11 +7,11 @@ import { Suspense } from "react";
 // Categorias da nav — design-system §3.2
 // "Acessórios", "Quadrinho/Mangás", "Camisas", "Artistas", "Parceiros"
 const CATEGORIAS = [
-  { label: "Acessórios",        href: "/lojas?categoria=acessorios",  slug: "acessorios" },
-  { label: "Quadrinhos/Mangás", href: "/lojas?categoria=manga",       slug: "manga" },
-  { label: "Camisas",           href: "/lojas?categoria=camisas",     slug: "camisas" },
-  { label: "Artistas",          href: "/lojas?categoria=artistas",    slug: "artistas" },
-  { label: "Parceiros",         href: "/lojas",                       slug: "parceiros" },
+  { label: "Acessórios", href: "/lojas?categoria=acessorios", slug: "acessorios" },
+  { label: "Quadrinhos/Mangás", href: "/lojas?categoria=manga", slug: "manga" },
+  { label: "Camisas", href: "/lojas?categoria=camisas", slug: "camisas" },
+  { label: "Artistas", href: "/lojas?categoria=artistas", slug: "artistas" },
+  { label: "Parceiros", href: "/lojas", slug: "parceiros" },
 ];
 
 function CategoryNavInner() {
@@ -45,8 +45,8 @@ function CategoryNavInner() {
           justifyContent: "center",
           gap: "0.5rem",          // gap-2 — espaçamento visível entre itens
           overflowX: "auto",
-          paddingTop: "0.25rem",    // reduzido de 0.5rem → barra mais compacta
-          paddingBottom: "0.25rem",
+          paddingTop: "0.125rem",    // reduzido de 0.5rem → barra mais compacta
+          paddingBottom: "0.125rem",
           listStyle: "none",
           scrollbarWidth: "none",
           msOverflowStyle: "none",

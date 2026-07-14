@@ -64,7 +64,7 @@ export default async function ProdutoPage({ params }: PageProps) {
       <Header />
       <CategoryNav />
 
-      <div className="max-w-5xl mx-auto px-4 py-12">
+      <div className="page-container py-12">
         {/* Breadcrumb */}
         <nav className="text-xs text-lavendergrey mb-6 font-sans" aria-label="Breadcrumb">
           <Link href="/" className="hover:text-text-primary transition-colors">Início</Link>

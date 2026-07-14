@@ -66,7 +66,7 @@ export default async function LojaPage({ params }: PageProps) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="page-container">
         {/* Cabeçalho da loja */}
         <div className="relative -mt-12 mb-8 flex flex-col sm:flex-row sm:items-end gap-4">
           {/* Logo */}

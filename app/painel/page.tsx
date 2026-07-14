@@ -33,7 +33,7 @@ export default async function PainelPage() {
     <main className="min-h-screen bg-gradient-to-br from-aquamarine/10 via-base to-mauve/10">
       {/* Header do painel */}
       <header className="bg-blushpop shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+        <div className="page-container py-4 flex items-center justify-between">
           <Link href="/" className="font-display font-black text-xl text-text-primary">
             Geekfy <span className="text-lavendergrey font-normal text-sm">Painel</span>
           </Link>
@@ -48,7 +48,7 @@ export default async function PainelPage() {
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-4 py-10">
+      <div className="page-container py-10">
         {!loja ? (
           /* Sem loja cadastrada */
           <div className="text-center py-20">

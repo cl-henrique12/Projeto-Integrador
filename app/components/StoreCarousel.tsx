@@ -44,8 +44,8 @@ export default function StoreCarousel({ stores }: StoreCarouselProps) {
   }
 
   return (
-    <section className="py-10 bg-base border-b border-lavendergrey/10" aria-labelledby="parceiras-heading">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="pt-10 pb-12 bg-base" aria-labelledby="parceiras-heading">
+      <div className="page-container">
         <h2
           id="parceiras-heading"
           style={{

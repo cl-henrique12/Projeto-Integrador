@@ -39,7 +39,7 @@ export default async function LojasPage({ searchParams }: PageProps) {
       <Header />
       <CategoryNav />
 
-      <div className="max-w-7xl mx-auto px-4 py-12">
+      <div className="page-container py-12">
         <h1 className="font-display font-black text-3xl text-text-primary mb-2">
           Lojas Parceiras
         </h1>
