@@ -64,7 +64,8 @@ Projeto-Integrador/
 │   ├── PRD.docx                → Documento de requisitos do produto
 │   ├── design-system.md        → Guia visual: cores, tipografia, componentes
 │   ├── geekfy_class_diagram.mermaid → Diagrama de classes do banco
-│   └── geekfy_ux_flowchart.mermaid  → Fluxograma de navegação do usuário
+│   ├── geekfy_ux_flowchart.mermaid  → Fluxograma de navegação do usuário
+│   └── schema.prisma           → Cópia/rascunho do schema do banco para referência rápida
 │
 ├── public/                     → Imagens e arquivos estáticos servidos diretamente
 ├── proxy.ts                    → Middleware do Next.js 16 (protege /painel e /admin)
@@ -81,7 +82,7 @@ Projeto-Integrador/
 
 | Caminho do arquivo | O que ele faz | Quando eu precisaria mexer nele |
 |---|---|---|
-| `app/page.tsx` | Página inicial: busca as lojas aprovadas e produtos ativos no banco, monta a home com Header, CategoryNav, HeroBanner, StoreCarousel e ProductGrid | Mudar quais lojas/produtos aparecem na home, alterar a ordem das seções ou o conteúdo do rodapé |
+| `app/page.tsx` | Página inicial: busca as lojas aprovadas e produtos ativos no banco, monta a home com Header, CategoryNav, HeroBanner, StoreCarousel, ProductGrid e a seção de Eventos (placeholder) | Mudar quais lojas/produtos/seções aparecem na home, alterar a ordem das seções ou o conteúdo do rodapé |
 | `app/layout.tsx` | Define a estrutura HTML base que envolve todas as páginas; configura título, descrição e palavras-chave do site para SEO | Mudar o título global do site, a descrição que aparece no Google, ou importar uma nova fonte |
 | `app/globals.css` | Define os tokens de design (cores, fontes, espaçamentos) como variáveis CSS, importa as fontes do Google e declara animações globais | Ajustar tokens de cor ou fonte que afetam todo o site; adicionar animações globais |
 | `tailwind.config.ts` | Registra as mesmas cores e fontes do design system como classes utilitárias do Tailwind (ex.: bg-mauve, font-display) | Adicionar ou renomear uma cor/fonte do design system para que possa ser usada como classe Tailwind |
@@ -125,6 +126,14 @@ O projeto tem **dois lugares** onde os tokens de design estão definidos — e e
 2. **`tailwind.config.ts`** — Registra as mesmas cores e fontes como **classes do Tailwind**. É o que permite escrever `className="bg-mauve"` em vez de escrever o código hexadecimal direto no estilo.
 
 **Regra de ouro:** se você mudar uma cor em `globals.css`, mude também em `tailwind.config.ts` — e vice-versa. Do contrário, a cor pode funcionar em alguns componentes e não em outros.
+
+### O contêiner de página global (`page-container`)
+
+Para garantir que o conteúdo fique centralizado e alinhado ao longo de diferentes tamanhos de tela (desktop, tablet e mobile), o projeto utiliza uma classe utilitária em `app/globals.css` chamada **`page-container`**.
+
+- **O que ela faz:** Define uma largura máxima de `80rem` (1280px), centraliza o elemento na horizontal (`margin: 0 auto`) e aplica `padding` interno nas laterais de forma responsiva (`1rem` no mobile, `1.5rem` no tablet e `2rem` no desktop).
+- **Quando usar:** Sempre que criar uma nova seção de conteúdo abaixo da navegação principal, envolva-a em um `div` ou `section` com a classe `className="page-container"`.
+- **Exceções:** O `Header` e a barra de categorias `CategoryNav` já possuem seus próprios contêineres internos e não devem ser envoltos pela classe global.
 
 ### A paleta de cores do projeto
 
@@ -239,29 +248,29 @@ A barra de navegação por categoria (`app/components/CategoryNav.tsx`) fica log
 
 | Propriedade | O que controla | Valor padrão | Mais compacto | Mais espaçoso |
 |---|---|---|---|---|
-| `paddingTop` | Espaço acima dos itens | `"0.25rem"` | `"0.125rem"` | `"0.75rem"` |
-| `paddingBottom` | Espaço abaixo dos itens | `"0.25rem"` | `"0.125rem"` | `"0.75rem"` |
+| `paddingTop` | Espaço acima dos itens | `"0.125rem"` | `"0.0625rem"` | `"0.25rem"` ou `"0.5rem"` |
+| `paddingBottom` | Espaço abaixo dos itens | `"0.125rem"` | `"0.0625rem"` | `"0.25rem"` ou `"0.5rem"` |
 
 Além disso, o `padding` interno de cada link (o espaço dentro de cada botão arredondado) está na propriedade `padding` do `<Link>` dentro do `map`:
 
 | Propriedade | Valor padrão | Mais compacto | Mais espaçoso |
 |---|---|---|---|
-| `padding` do link | `"0.375rem 1rem"` | `"0.25rem 0.75rem"` | `"0.625rem 1.5rem"` |
+| `padding` do link | `"0.375rem 1rem"` | `"0.25rem 0.75rem"` | `"0.5rem 1.25rem"` |
 
-**Exemplo prático — tornar a barra ainda mais fina:**
+**Exemplo prático — tornar a barra um pouco mais espaçosa:**
 
 1. Abra `app/components/CategoryNav.tsx`
 2. No elemento `<ul>` (por volta da linha 48), altere:
    ```diff
-   - paddingTop: "0.25rem",
-   - paddingBottom: "0.25rem",
-   + paddingTop: "0.125rem",
-   + paddingBottom: "0.125rem",
+   - paddingTop: "0.125rem",
+   - paddingBottom: "0.125rem",
+   + paddingTop: "0.25rem",
+   + paddingBottom: "0.25rem",
    ```
 3. No `<Link>` dentro do `.map()` (por volta da linha 64), altere:
    ```diff
    - padding: "0.375rem 1rem",
-   + padding: "0.25rem 0.75rem",
+   + padding: "0.5rem 1.25rem",
    ```
 4. Salve e veja a mudança instantânea no navegador
 
@@ -314,6 +323,9 @@ DATABASE_URL="postgresql://..."
 DIRECT_URL="postgresql://..."
 NEXT_PUBLIC_SUPABASE_URL="https://seu-projeto.supabase.co"
 NEXT_PUBLIC_SUPABASE_ANON_KEY="eyJ..."
+
+# (Opcional) Chave de API da OpenAI para a busca semântica baseada em embeddings
+OPENAI_API_KEY="sk-proj-..."
 ```
 
 As URLs e chaves reais devem ser obtidas com o responsável pelo projeto ou diretamente no painel do Supabase em **Project Settings → API**.
@@ -420,18 +432,19 @@ DIRECT_URL="postgresql://postgres:SUA_SENHA@db.bqownmtgukslunzvycuv.supabase.co:
 
 As URLs e a senha exatas para o seu ambiente estão em **Supabase → Project Settings → Database → Connection string**. Selecione **"Transaction mode"** para obter a URL com pooler (porta 6543).
 
-#### Causa 3 — Arquivo `.env` incorreto ou ausente
+#### Causa 3 — Arquivo `.env.local` incorreto ou ausente
 
-Verifique se o arquivo `.env` (na raiz do projeto, mesmo nível do `package.json`) existe e contém as quatro variáveis:
+Verifique se o arquivo `.env.local` (na raiz do projeto, mesmo nível do `package.json`) existe e contém as variáveis necessárias:
 
 ```
 DATABASE_URL="..."
 DIRECT_URL="..."
 NEXT_PUBLIC_SUPABASE_URL="..."
 NEXT_PUBLIC_SUPABASE_ANON_KEY="..."
+OPENAI_API_KEY="..." # (Opcional)
 ```
 
-Se alguma estiver faltando, peça ao responsável pelo projeto. O Next.js lê o `.env` automaticamente — **não é necessário criar `.env.local`** neste projeto, pois o `.env` já está configurado.
+Se alguma estiver faltando, peça ao responsável pelo projeto. O Next.js lê o `.env.local` automaticamente. Lembre-se de que arquivos `.env*` estão no `.gitignore` e não devem ser enviados ao repositório Git.
 
 ---
 
