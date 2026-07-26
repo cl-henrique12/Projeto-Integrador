@@ -3,6 +3,8 @@ import { StoreStatus, ProductStatus } from "@prisma/client";
 import Header from "@/app/components/Header";
 import CategoryNav from "@/app/components/CategoryNav";
 import Image from "next/image";
+import { SafeImage } from "@/app/components/SafeImage";
+import { StoreLogo } from "@/app/components/StoreLogo";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -61,7 +63,7 @@ export default async function LojaPage({ params }: PageProps) {
       {/* Cover */}
       <div className="relative h-56 md:h-72 bg-gradient-to-r from-mauve/50 to-blushpop/50 overflow-hidden">
         {loja.coverUrl && (
-          <Image src={loja.coverUrl} alt={`Capa de ${loja.name}`} fill className="object-cover" priority />
+          <SafeImage src={loja.coverUrl} alt={`Capa de ${loja.name}`} fill className="object-cover" priority />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
       </div>
@@ -71,13 +73,7 @@ export default async function LojaPage({ params }: PageProps) {
         <div className="relative -mt-12 mb-8 flex flex-col sm:flex-row sm:items-end gap-4">
           {/* Logo */}
           <div className="w-24 h-24 rounded-full border-4 border-white bg-white overflow-hidden shadow-lg flex-shrink-0">
-            {loja.logoUrl ? (
-              <Image src={loja.logoUrl} alt={`Logo ${loja.name}`} width={96} height={96} className="object-cover" />
-            ) : (
-              <div className="w-full h-full bg-gradient-to-br from-mauve to-blushpop flex items-center justify-center">
-                <span className="font-display font-black text-3xl text-text-primary">{loja.name.charAt(0)}</span>
-              </div>
-            )}
+            <StoreLogo logoUrl={loja.logoUrl} name={loja.name} size={96} />
           </div>
 
           <div className="flex-1 pb-2">
@@ -141,7 +137,7 @@ export default async function LojaPage({ params }: PageProps) {
                   >
                     <div className="relative h-44 bg-gradient-to-br from-aquamarine/20 to-mauve/20">
                       {img && (
-                        <Image src={img.url} alt={produto.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="(max-width: 640px) 100vw, 25vw" />
+                        <SafeImage src={img.url} alt={produto.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="(max-width: 640px) 100vw, 25vw" />
                       )}
                     </div>
                     <div className="p-4">

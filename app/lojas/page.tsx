@@ -2,7 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { StoreStatus } from "@prisma/client";
 import Header from "@/app/components/Header";
 import CategoryNav from "@/app/components/CategoryNav";
-import Image from "next/image";
+import { SafeImage } from "@/app/components/SafeImage";
+import { StoreLogo } from "@/app/components/StoreLogo";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -84,18 +85,12 @@ export default async function LojasPage({ searchParams }: PageProps) {
                   {/* Cover */}
                   <div className="relative h-36 bg-gradient-to-br from-aquamarine/30 to-mauve/30">
                     {loja.coverUrl && (
-                      <Image src={loja.coverUrl} alt="" fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <SafeImage src={loja.coverUrl} alt="" fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
                     )}
                     {/* Logo sobre o cover */}
                     <div className="absolute -bottom-6 left-4">
                       <div className="w-14 h-14 rounded-full border-4 border-white bg-white overflow-hidden shadow-md">
-                        {loja.logoUrl ? (
-                          <Image src={loja.logoUrl} alt={`Logo ${loja.name}`} width={56} height={56} className="object-cover" />
-                        ) : (
-                          <div className="w-full h-full bg-gradient-to-br from-mauve to-blushpop flex items-center justify-center">
-                            <span className="font-display font-black text-lg text-text-primary">{loja.name.charAt(0)}</span>
-                          </div>
-                        )}
+                        <StoreLogo logoUrl={loja.logoUrl} name={loja.name} size={56} />
                       </div>
                     </div>
                   </div>

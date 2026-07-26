@@ -1,7 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Product, ProductImage, Store } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
+import { SafeImage } from "@/app/components/SafeImage";
 
 type ProductWithDetails = Product & {
   images: ProductImage[];
@@ -105,7 +105,7 @@ export default function ProductGrid({ products }: ProductGridProps) {
                   {/* Imagem do produto — 285px fiel ao Figma */}
                   <div className="relative overflow-hidden flex-shrink-0" style={{ height: "285px" }}>
                     {firstImage ? (
-                      <Image
+                      <SafeImage
                         src={firstImage.url}
                         alt={product.name}
                         fill

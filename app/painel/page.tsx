@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { SafeImage } from "@/app/components/SafeImage";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -149,7 +150,9 @@ export default async function PainelPage() {
                   return (
                     <li key={produto.id} className="flex items-center gap-4 bg-white rounded-card px-4 py-3 shadow-sm border border-lavendergrey/10 hover:border-mauve/30 transition-colors">
                       <div className="w-12 h-12 rounded-lg overflow-hidden bg-mauve/10 flex-shrink-0">
-                        {img && <img src={img.url} alt="" className="w-full h-full object-cover" />}
+                        {img && (
+                          <SafeImage src={img.url} alt="" width={48} height={48} className="w-full h-full object-cover" />
+                        )}
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-display font-semibold text-text-primary text-sm truncate">{produto.name}</p>

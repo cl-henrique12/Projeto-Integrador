@@ -2,7 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { ProductStatus, StoreStatus } from "@prisma/client";
 import Header from "@/app/components/Header";
 import CategoryNav from "@/app/components/CategoryNav";
-import Image from "next/image";
+import { SafeImage } from "@/app/components/SafeImage";
+import { StoreLogo } from "@/app/components/StoreLogo";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -82,7 +83,7 @@ export default async function ProdutoPage({ params }: PageProps) {
             {produto.images.length > 0 ? (
               <div className="space-y-3">
                 <div className="relative h-80 rounded-card overflow-hidden bg-gradient-to-br from-aquamarine/20 to-mauve/20">
-                  <Image
+                  <SafeImage
                     src={produto.images[0].url}
                     alt={produto.name}
                     fill
@@ -94,7 +95,7 @@ export default async function ProdutoPage({ params }: PageProps) {
                   <div className="flex gap-2 overflow-x-auto">
                     {produto.images.map((img, i) => (
                       <div key={img.id} className="relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 border-2 border-transparent hover:border-mauve transition-colors cursor-pointer">
-                        <Image src={img.url} alt={`Foto ${i + 1} de ${produto.name}`} fill className="object-cover" />
+                        <SafeImage src={img.url} alt={`Foto ${i + 1} de ${produto.name}`} fill className="object-cover" />
                       </div>
                     ))}
                   </div>
@@ -159,10 +160,8 @@ export default async function ProdutoPage({ params }: PageProps) {
               className="flex items-center gap-3 p-4 rounded-card border border-lavendergrey/20 hover:border-mauve/50 hover:bg-mauve/5 transition-all group"
               aria-label={`Ver mais produtos de ${produto.store.name}`}
             >
-              <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 bg-gradient-to-br from-mauve to-blushpop">
-                {produto.store.logoUrl && (
-                  <Image src={produto.store.logoUrl} alt={produto.store.name} width={48} height={48} className="object-cover" />
-                )}
+              <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
+                <StoreLogo logoUrl={produto.store.logoUrl} name={produto.store.name} size={48} />
               </div>
               <div className="flex-1">
                 <p className="text-lavendergrey text-xs font-sans">Vendido por</p>

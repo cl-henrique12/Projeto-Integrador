@@ -1,5 +1,6 @@
 import Header from "@/app/components/Header";
 import CategoryNav from "@/app/components/CategoryNav";
+import { SafeImage } from "@/app/components/SafeImage";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -112,7 +113,7 @@ export default async function BuscaPage({ searchParams }: PageProps) {
                   >
                     <div className="relative h-48 bg-gradient-to-br from-aquamarine/20 to-mauve/20">
                       {img && (
-                        <img src={img.url} alt={produto.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                        <SafeImage src={img.url} alt={produto.name} fill className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                       )}
                     </div>
                     <div className="p-4">

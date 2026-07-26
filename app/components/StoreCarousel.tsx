@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Store } from "@prisma/client";
+import { StoreLogo } from "@/app/components/StoreLogo";
 
 interface StoreCarouselProps {
   stores: Pick<Store, "id" | "slug" | "name" | "logoUrl">[];
@@ -73,34 +73,9 @@ export default function StoreCarousel({ stores }: StoreCarouselProps) {
               role="listitem"
               aria-label={`Ver loja ${store.name}`}
             >
-              {/* Avatar circular 100×100 — fiel ao Figma
-                  overflow-hidden garante que o alt text nunca estoure o círculo */}
-              <div
-                style={{
-                  width: 100,
-                  height: 100,
-                  borderRadius: "50%",
-                  overflow: "hidden",
-                  border: "4px solid transparent",
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.10)",
-                  flexShrink: 0,
-                  position: "relative",
-                  background: "linear-gradient(135deg, rgba(142,248,213,0.4), rgba(211,188,255,0.3))",
-                  transition: "border-color 0.3s, box-shadow 0.3s, transform 0.3s",
-                }}
-                className="group-hover:scale-105"
-              >
-                {store.logoUrl ? (
-                  <Image
-                    src={store.logoUrl}
-                    alt={`Logo da loja ${store.name}`}
-                    width={100}
-                    height={100}
-                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                  />
-                ) : (
-                  <StoreAvatarFallback name={store.name} />
-                )}
+              {/* Avatar circular 100×100 — fiel ao Figma */}
+              <div className="w-[100px] h-[100px] rounded-full overflow-hidden border-4 border-transparent group-hover:border-mauve transition-all duration-300 shadow-md group-hover:shadow-xl group-hover:scale-105 transform">
+                <StoreLogo logoUrl={store.logoUrl} name={store.name} size={100} />
               </div>
 
               {/* Nome da loja */}
