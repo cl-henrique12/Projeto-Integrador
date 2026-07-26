@@ -52,7 +52,7 @@ export default async function AdminPage() {
         <p className="text-lavendergrey text-sm font-sans mb-8">Gerencie lojas, produtos e conteúdo da plataforma.</p>
 
         {/* Métricas gerais */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 mb-10">
           {[
             { label: "Lojas aprovadas",  value: lojasAprovadas },
             { label: "Pendentes",         value: lojasPendentes.length, highlight: lojasPendentes.length > 0 },
@@ -67,7 +67,7 @@ export default async function AdminPage() {
         </div>
 
         {/* Lojas pendentes */}
-        <h2 className="font-display font-bold text-lg text-text-primary mb-4 flex items-center gap-2">
+        <h2 className="font-display font-bold text-lg text-text-primary mb-6 flex items-center gap-2">
           Lojas Pendentes de Aprovação
           {lojasPendentes.length > 0 && (
             <span className="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs font-bold rounded-full">{lojasPendentes.length}</span>

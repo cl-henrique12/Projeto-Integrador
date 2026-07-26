@@ -131,6 +131,32 @@ e sinalize isso no final da resposta como pendência de decisão.
 ## 5. Pendências a resolver antes do prompt final
 
 - [ ] Nome e pesos exatos da fonte usada no Figma
-- [ ] Raio de borda padrão dos cards/botões (ex: 8px, 12px, full-rounded?)
-- [ ] Espaçamento padrão entre seções (ex: 24px, 32px, 48px?)
+- [x] Raio de borda padrão dos cards/botões → **12px** (`--radius-card: 12px`)
+- [x] Espaçamento padrão entre seções → **48px** (`--spacing-section: 48px`, ver seção 6)
 - [ ] Exportar ícones do Figma (coração, sacola, usuário, lupa) como SVG para reuso exato
+
+---
+
+## 6. Escala de Espaçamento (fonte da verdade)
+
+Três níveis fixos — aplicar **sem exceções** em todas as páginas do sistema.
+
+| Nível | Nome | Valor | Classes Tailwind | Uso típico |
+|---|---|---|---|---|
+| **S** | inline | 6 – 8 px | `gap-1.5` / `gap-2` | Ícone + texto lado a lado; badge ao lado de label |
+| **M** | bloco | 20 px | `gap-5` | Cards dentro de um mesmo grid; itens de lista |
+| **L** | seção | 40 – 48 px | `py-10` / `.section-gap` | Padding vertical de containers de página; espaço entre seções |
+
+### 6.1 Headings de seção
+- `h2` de seção → **`mb-6`** (24 px) antes do conteúdo
+- `h1` de página → **`mb-2`** (8 px) antes do subtítulo, depois `mb-8` antes do primeiro bloco
+
+### 6.2 Containers de página
+- Toda página usa `page-container py-10` no wrapper principal de conteúdo
+- Seções do tipo "bloco alternado" usam a classe `.section-gap` (48 px top+bottom)
+
+### 6.3 Classes inválidas a evitar
+Tailwind **não gera** classes com valores fora da escala configurada. Classes como
+`h-`, `w-30`, `mb-15`, `py-133` resultam em **`property: 0`** silenciosamente.
+Sempre conferir no build output ou no navegador com DevTools.
+

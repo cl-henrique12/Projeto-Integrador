@@ -39,7 +39,7 @@ export default async function LojasPage({ searchParams }: PageProps) {
       <Header />
       <CategoryNav />
 
-      <div className="page-container py-12">
+      <div className="page-container py-section">
         <h1 className="font-display font-black text-3xl text-text-primary mb-2">
           Lojas Parceiras
         </h1>
@@ -100,7 +100,7 @@ export default async function LojasPage({ searchParams }: PageProps) {
                     </div>
                   </div>
 
-                  <div className="px-4 pt-8 pb-4">
+                  <div className="px-card-inner pt-8 pb-4">
                     <h2 className="font-display font-bold text-lg text-text-primary">{loja.name}</h2>
                     {loja.neighborhood && (
                       <p className="text-xs text-lavendergrey mt-0.5">{loja.neighborhood} · {loja.city}</p>

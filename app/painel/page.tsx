@@ -33,7 +33,7 @@ export default async function PainelPage() {
     <main className="min-h-screen bg-gradient-to-br from-aquamarine/10 via-base to-mauve/10">
       {/* Header do painel */}
       <header className="bg-blushpop shadow-sm">
-        <div className="page-container py-4 flex items-center justify-between">
+        <div className="page-container py-10 flex items-center justify-between">
           <Link href="/" className="font-display font-black text-xl text-text-primary">
             Geekfy <span className="text-lavendergrey font-normal text-sm">Painel</span>
           </Link>
@@ -48,11 +48,11 @@ export default async function PainelPage() {
         </div>
       </header>
 
-      <div className="page-container py-10">
+      <div className="page-container py-section">
         {!loja ? (
           /* Sem loja cadastrada */
           <div className="text-center py-20">
-            <div className="w-20 h-20 bg-mauve/20 rounded-full flex items-center justify-center mx-auto mb-6">
+            <div className="w-28 h-28 bg-mauve/20 rounded-full flex items-center justify-center mx-auto mb-8">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 text-mauve">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z" />
               </svg>
@@ -103,22 +103,22 @@ export default async function PainelPage() {
 
             {/* Cards de métricas — RF05 */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
-              <div className="bg-white rounded-card p-5 shadow-sm border border-lavendergrey/10">
+              <div className="bg-white rounded-card p-card-inner shadow-sm border border-lavendergrey/10">
                 <p className="text-lavendergrey text-xs font-sans uppercase tracking-wide mb-1">Views da loja</p>
                 <p className="font-display font-black text-3xl text-text-primary">{loja.viewsCount.toLocaleString("pt-BR")}</p>
               </div>
-              <div className="bg-white rounded-card p-5 shadow-sm border border-lavendergrey/10">
+              <div className="bg-white rounded-card p-card-inner shadow-sm border border-lavendergrey/10">
                 <p className="text-lavendergrey text-xs font-sans uppercase tracking-wide mb-1">Produtos ativos</p>
                 <p className="font-display font-black text-3xl text-text-primary">{loja._count.products}</p>
               </div>
-              <div className="bg-white rounded-card p-5 shadow-sm border border-lavendergrey/10">
+              <div className="bg-white rounded-card p-card-inner shadow-sm border border-lavendergrey/10">
                 <p className="text-lavendergrey text-xs font-sans uppercase tracking-wide mb-1">Categorias</p>
                 <p className="font-display font-black text-3xl text-text-primary">{loja.categories.length}</p>
               </div>
             </div>
 
             {/* Ações rápidas */}
-            <div className="flex gap-3 mb-8 flex-wrap">
+            <div className="flex gap-3 mb-10 flex-wrap">
               <Link
                 href="/painel/produtos/novo"
                 className="flex items-center gap-2 bg-mauve text-text-primary px-5 py-2.5 rounded-full font-semibold text-sm hover:bg-blushpop transition-colors shadow-sm"
@@ -134,7 +134,7 @@ export default async function PainelPage() {
             </div>
 
             {/* Lista de produtos */}
-            <h2 className="font-display font-bold text-lg text-text-primary mb-4">Meus Produtos</h2>
+            <h2 className="font-display font-bold text-lg text-text-primary mb-6">Meus Produtos</h2>
             {loja.products.length === 0 ? (
               <div className="bg-white rounded-card p-8 text-center border border-lavendergrey/10 shadow-sm">
                 <p className="text-lavendergrey font-sans text-sm mb-4">Você ainda não tem produtos cadastrados.</p>

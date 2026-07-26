@@ -9,20 +9,20 @@
 /* ── Tailwind v4: tema com tokens de cor e fonte ─────────────── */
 @theme {
   /* Paleta oficial — design-system.md §1.1 */
-  --color-base:          #FFFFFF;
-  --color-aquamarine:    #8EF8D5;
-  --color-blushpop:      #FFBFEA;
-  --color-mauve:         #D3BCFF;
-  --color-lavendergrey:  #8786A8;
+  --color-base: #FFFFFF;
+  --color-aquamarine: #8EF8D5;
+  --color-blushpop: #FFBFEA;
+  --color-mauve: #D3BCFF;
+  --color-lavendergrey: #8786A8;
 
   /* Cores de texto */
-  --color-text-primary:   #1A1A2E;
+  --color-text-primary: #1A1A2E;
   --color-text-secondary: #8786A8;
 
   /* Fontes — pendência design-system §5 resolvida:
      Nunito para títulos (geométrica/arredondada, tom geek/pop)
      Inter para corpo (neutra, legível) */
-  --font-sans:    'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
   --font-display: 'Nunito', ui-sans-serif, system-ui, sans-serif;
 
   /* Raio de borda — pendência §5 resolvida: 12px para cards */
@@ -57,7 +57,12 @@ body {
 }
 
 /* Headings com fonte display (Nunito) */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-display);
   font-weight: 700;
   line-height: 1.2;
@@ -74,23 +79,31 @@ h1, h2, h3, h4, h5, h6 {
    NÃO aplicar no header nem na CategoryNav — eles têm seus próprios containers.
    Responsivo: 1rem mobile → 1.5rem tablet → 2rem desktop */
 .page-container {
-  max-width: 80rem;      /* 1280px — alinhado com o max-width do Header */
+  max-width: 80rem;
+  /* 1280px — alinhado com o max-width do Header */
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1rem;    /* 16px — mobile */
+  padding-left: 1rem;
+  /* 16px — mobile */
   padding-right: 1rem;
 }
 
-@media (min-width: 640px) {   /* sm */
+@media (min-width: 640px) {
+
+  /* sm */
   .page-container {
-    padding-left: 1.5rem;  /* 24px */
+    padding-left: 1.5rem;
+    /* 24px */
     padding-right: 1.5rem;
   }
 }
 
-@media (min-width: 768px) {   /* md */
+@media (min-width: 768px) {
+
+  /* md */
   .page-container {
-    padding-left: 2rem;    /* 32px */
+    padding-left: 2rem;
+    /* 32px */
     padding-right: 2rem;
   }
 }
@@ -100,41 +113,77 @@ h1, h2, h3, h4, h5, h6 {
   width: 6px;
   height: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--color-lavendergrey);
   border-radius: 999px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-mauve);
 }
 
 /* ── Animações globais ───────────────────────────────────────── */
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes slideInLeft {
-  from { opacity: 0; transform: translateX(-32px); }
-  to   { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-32px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @keyframes slideInRight {
-  from { opacity: 0; transform: translateX(32px); }
-  to   { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(32px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @keyframes shimmer {
-  0%   { background-position: -200% 0; }
-  100% { background-position:  200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 @keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(211, 188, 255, 0.4); }
-  50%       { box-shadow: 0 0 0 8px rgba(211, 188, 255, 0); }
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(211, 188, 255, 0.4);
+  }
+
+  50% {
+    box-shadow: 0 0 0 8px rgba(211, 188, 255, 0);
+  }
 }
 
 .animate-fade-in-up {
@@ -161,5 +210,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Esconde scrollbar mas mantém scroll funcional */
-.scrollbar-hide::-webkit-scrollbar { display: none; }
-.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

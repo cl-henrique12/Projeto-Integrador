@@ -126,7 +126,7 @@ export default async function LojaPage({ params }: PageProps) {
         )}
 
         {/* Produtos da loja */}
-        <h2 className="font-display font-bold text-xl text-text-primary mb-5">Produtos</h2>
+        <h2 className="font-display font-bold text-xl text-text-primary mb-6">Produtos</h2>
         {loja.products.length === 0 ? (
           <p className="text-lavendergrey text-sm py-8 text-center">Esta loja ainda não tem produtos cadastrados.</p>
         ) : (
@@ -144,7 +144,7 @@ export default async function LojaPage({ params }: PageProps) {
                         <Image src={img.url} alt={produto.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="(max-width: 640px) 100vw, 25vw" />
                       )}
                     </div>
-                    <div className="p-3">
+                    <div className="p-4">
                       <h3 className="font-display font-semibold text-sm text-text-primary line-clamp-2">{produto.name}</h3>
                       <p className="font-display font-black text-base mt-1 text-text-primary">
                         {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(Number(produto.price))}
