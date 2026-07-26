@@ -57,16 +57,14 @@ export default async function BuscaPage({ searchParams }: PageProps) {
       <Header />
       <CategoryNav />
 
-      <div className="page-container py-12">
+      <div className="page-container py-section">
         <h1 className="font-display font-black text-2xl text-text-primary mb-2">
           {query ? `Resultados para "${query}"` : "Busca"}
         </h1>
 
-        {query && (
+        {query && produtos.length > 0 && (
           <p className="text-lavendergrey text-sm mb-8 font-sans">
-            {produtos.length === 0
-              ? "Nenhum produto encontrado."
-              : `${produtos.length} produto${produtos.length !== 1 ? "s" : ""} encontrado${produtos.length !== 1 ? "s" : ""}`}
+            {`${produtos.length} produto${produtos.length !== 1 ? "s" : ""} encontrado${produtos.length !== 1 ? "s" : ""}`}
           </p>
         )}
 
@@ -76,22 +74,38 @@ export default async function BuscaPage({ searchParams }: PageProps) {
           </p>
         )}
 
-        {/* Estado vazio com sugestões */}
+        {/* Estado vazio — padrão do painel/page.tsx */}
         {query && produtos.length === 0 && (
-          <div className="mt-8 p-6 rounded-card bg-mauve/10 max-w-lg">
-            <p className="font-display font-semibold text-text-primary mb-3">Sugestões de busca:</p>
-            <div className="flex flex-wrap gap-2">
-              {["One Piece", "Naruto", "Pokémon", "D&D", "Magic", "Dragon Ball", "K-Pop"].map((tag) => (
-                <a
-                  key={tag}
-                  href={`/busca?q=${encodeURIComponent(tag)}`}
-                  className="px-3 py-1.5 rounded-full bg-aquamarine/50 text-text-primary text-sm font-semibold hover:bg-aquamarine transition-colors"
-                >
-                  {tag}
-                </a>
-              ))}
-            </div>
-            <div className="mt-4">
+          <div className="flex justify-center mt-8">
+            <div className="bg-white rounded-card p-12 shadow-sm border border-lavendergrey/10 w-full max-w-lg text-center">
+              {/* Ícone decorativo */}
+              <div className="w-20 h-20 bg-mauve/20 rounded-full flex items-center justify-center mx-auto mb-8">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-9 h-9 text-mauve">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                </svg>
+              </div>
+
+              <h2 className="font-display font-black text-xl text-text-primary mb-2">
+                Nenhum produto encontrado
+              </h2>
+              <p className="text-lavendergrey font-sans text-sm mb-6 max-w-sm mx-auto">
+                Não achamos nada para <strong className="text-text-primary">&ldquo;{query}&rdquo;</strong>. Tente um dos fandoms abaixo:
+              </p>
+
+              {/* Tags de sugestão */}
+              <div className="flex flex-wrap justify-center gap-2 mb-6">
+                {["One Piece", "Naruto", "Pokémon", "D&D", "Magic", "Dragon Ball", "K-Pop"].map((tag) => (
+                  <a
+                    key={tag}
+                    href={`/busca?q=${encodeURIComponent(tag)}`}
+                    className="px-3 py-1.5 rounded-full bg-aquamarine/50 text-text-primary text-sm font-semibold hover:bg-aquamarine transition-colors"
+                  >
+                    {tag}
+                  </a>
+                ))}
+              </div>
+
+              {/* Link ver todas as lojas */}
               <a href="/lojas" className="text-sm text-mauve hover:underline font-semibold">
                 Ver todas as lojas →
               </a>

@@ -118,7 +118,7 @@ export default async function ProdutoPage({ params }: PageProps) {
 
               {/* Tags de fandom — RF03 */}
               {produto.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex flex-wrap gap-1.5 mt-2">
                   {produto.tags.map(({ tag }) => (
                     <span key={tag.id} className="px-2.5 py-0.5 rounded-full bg-aquamarine/50 text-text-primary text-xs font-semibold">
                       {tag.name}
