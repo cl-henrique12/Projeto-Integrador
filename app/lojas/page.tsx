@@ -2,8 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { StoreStatus } from "@prisma/client";
 import Header from "@/app/components/Header";
 import CategoryNav from "@/app/components/CategoryNav";
-import { SafeImage } from "@/app/components/SafeImage";
-import { StoreLogo } from "@/app/components/StoreLogo";
+import StoreCard from "@/app/components/StoreCard";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -75,44 +74,20 @@ export default async function LojasPage({ searchParams }: PageProps) {
             <Link href="/lojas" className="text-sm text-mauve hover:underline">Ver todas as lojas</Link>
           </div>
         ) : (
-          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <ul className="stores-grid">
             {lojas.map((loja) => (
               <li key={loja.id}>
-                <Link
-                  href={`/lojas/${loja.slug}`}
-                  className="block rounded-card overflow-hidden bg-white shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 transform border border-lavendergrey/10 group"
-                >
-                  {/* Cover */}
-                  <div className="relative h-36 bg-gradient-to-br from-aquamarine/30 to-mauve/30">
-                    {loja.coverUrl && (
-                      <SafeImage src={loja.coverUrl} alt="" fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
-                    )}
-                    {/* Logo sobre o cover */}
-                    <div className="absolute -bottom-6 left-4">
-                      <div className="w-14 h-14 rounded-full border-4 border-white bg-white overflow-hidden shadow-md">
-                        <StoreLogo logoUrl={loja.logoUrl} name={loja.name} size={56} />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="p-5 pt-8">
-                    <h2 className="font-display font-bold text-lg text-text-primary">{loja.name}</h2>
-                    {loja.neighborhood && (
-                      <p className="text-xs text-lavendergrey mt-0.5">{loja.neighborhood} · {loja.city}</p>
-                    )}
-                    {loja.description && (
-                      <p className="text-sm text-text-primary/70 mt-2 line-clamp-2 font-sans">{loja.description}</p>
-                    )}
-                    <div className="flex flex-wrap gap-1.5 mt-3">
-                      {loja.categories.slice(0, 3).map(({ category }) => (
-                        <span key={category.id} className="px-2 py-0.5 rounded-full bg-aquamarine/50 text-text-primary text-xs font-semibold">
-                          {category.name}
-                        </span>
-                      ))}
-                    </div>
-                    <p className="text-xs text-lavendergrey mt-3">{loja._count.products} produto{loja._count.products !== 1 ? "s" : ""}</p>
-                  </div>
-                </Link>
+                <StoreCard
+                  slug={loja.slug}
+                  name={loja.name}
+                  logoUrl={loja.logoUrl}
+                  coverUrl={loja.coverUrl}
+                  neighborhood={loja.neighborhood}
+                  city={loja.city}
+                  description={loja.description}
+                  categories={loja.categories}
+                  productCount={loja._count.products}
+                />
               </li>
             ))}
           </ul>
