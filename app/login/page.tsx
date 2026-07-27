@@ -32,16 +32,16 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-aquamarine/20 via-base to-blushpop/20 flex items-center justify-center p-4">
-      <div className="bg-white rounded-card shadow-xl p-8 max-w-md w-full">
-        <div className="text-center mb-8">
-          <div className="w-14 h-14 rounded-full bg-blushpop flex items-center justify-center mx-auto mb-3">
+      <div className="bg-white rounded-card shadow-xl p-10 max-w-md w-full">
+        <div className="text-center">
+          <div className="w-14 h-14 rounded-full bg-blushpop flex items-center justify-center mx-auto mb-4">
             <span className="font-display font-black text-text-primary">GKF</span>
           </div>
           <h1 className="font-display font-black text-2xl text-text-primary">Entrar no Geekfy</h1>
           <p className="text-lavendergrey text-sm mt-1 font-sans">Acesse o painel da sua loja</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-6">
           <div>
             <label htmlFor="login-email" className="block text-xs font-semibold text-text-primary mb-1.5 font-sans">E-mail</label>
             <input
@@ -78,13 +78,13 @@ export default function LoginPage() {
             id="btn-login"
             type="submit"
             disabled={carregando}
-            className="bg-mauve text-text-primary py-3.5 rounded-full font-bold text-sm hover:bg-blushpop transition-colors shadow-md disabled:opacity-60 mt-2"
+            className="bg-mauve text-text-primary py-3.5 rounded-full font-bold text-sm hover:bg-blushpop transition-colors shadow-md disabled:opacity-60 mt-6"
           >
             {carregando ? "Entrando..." : "Entrar →"}
           </button>
         </form>
 
-        <p className="text-center text-xs text-lavendergrey mt-6 font-sans">
+        <p className="text-center text-xs text-lavendergrey mt-4 font-sans">
           Ainda não tem conta?{" "}
           <Link href="/cadastro" className="text-mauve hover:underline font-semibold">Cadastrar minha loja</Link>
         </p>
