@@ -29,11 +29,7 @@ const config: Config = {
         // Decisão provisória: 12px para cards
         card: "12px",
       },
-      spacing: {
-        // Pendência design-system §5: espaçamento entre seções não especificado
-        // Decisão provisória: 48px entre seções
-        section: "48px",
-      },
+      
     },
   },
   plugins: [],

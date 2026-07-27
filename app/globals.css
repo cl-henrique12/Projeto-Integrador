@@ -30,9 +30,10 @@
 
   /* Espaçamento entre seções — pendência §5 resolvida: 48px */
   --spacing-section: 48px;
-
-  /* Espaçamento interno dos cards — resolve p-card-inner / px-card-inner */
+  --spacing-hero: 96px;
+  /* novo! */
   --spacing-card-inner: 20px;
+  /* novo! */
 }
 
 /* ── Google Fonts — Nunito + Inter via @font-face CDN ─────────
