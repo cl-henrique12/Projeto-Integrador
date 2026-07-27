@@ -34,11 +34,11 @@ export default async function PainelPage() {
     <main className="min-h-screen bg-gradient-to-br from-aquamarine/10 via-base to-mauve/10">
       {/* Header do painel */}
       <header className="bg-blushpop shadow-sm">
-        <div className="page-container py-10 flex items-center justify-between">
+        <div className="page-container flex items-center justify-between" style={{ paddingTop: "20px", paddingBottom: "20px" }}>
           <Link href="/" className="font-display font-black text-xl text-text-primary">
             Geekfy <span className="text-lavendergrey font-normal text-sm">Painel</span>
           </Link>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center" style={{ gap: "16px" }}>
             <span className="text-sm text-text-primary/70 font-sans hidden sm:block">{user.email}</span>
             <form action="/api/auth/logout" method="POST">
               <button type="submit" className="text-sm text-lavendergrey hover:text-text-primary transition-colors font-semibold">
@@ -49,22 +49,26 @@ export default async function PainelPage() {
         </div>
       </header>
 
-      <div className="page-container py-section">
+      <div className="page-container" style={{ paddingTop: "40px", paddingBottom: "64px" }}>
         {!loja ? (
           /* Sem loja cadastrada */
-          <div className="text-center py-20">
-            <div className="w-28 h-28 bg-mauve/20 rounded-full flex items-center justify-center mx-auto mb-8">
+          <div className="text-center" style={{ paddingTop: "64px", paddingBottom: "64px" }}>
+            <div
+              className="bg-mauve/20 rounded-full flex items-center justify-center mx-auto"
+              style={{ width: "112px", height: "112px", marginBottom: "32px" }}
+            >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 text-mauve">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z" />
               </svg>
             </div>
-            <h1 className="font-display font-black text-2xl text-text-primary mb-2">Você ainda não tem uma loja</h1>
-            <p className="text-lavendergrey font-sans text-sm mb-6 max-w-sm mx-auto">
+            <h1 className="font-display font-black text-2xl text-text-primary" style={{ marginBottom: "12px" }}>Você ainda não tem uma loja</h1>
+            <p className="text-lavendergrey font-sans text-sm max-w-sm mx-auto" style={{ marginBottom: "28px" }}>
               Cadastre sua loja geek e comece a receber clientes de toda Manaus!
             </p>
             <Link
               href="/cadastro/loja"
-              className="inline-block bg-mauve text-text-primary px-8 py-3 rounded-full font-bold text-sm hover:bg-blushpop transition-colors shadow-md"
+              className="inline-block bg-mauve text-text-primary rounded-full font-bold text-sm hover:bg-blushpop transition-colors shadow-md"
+              style={{ padding: "14px 32px" }}
             >
               Cadastrar minha loja →
             </Link>
@@ -72,12 +76,12 @@ export default async function PainelPage() {
         ) : (
           <>
             {/* Status da loja */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between" style={{ gap: "16px", marginBottom: "32px" }}>
               <div>
                 <h1 className="font-display font-black text-2xl text-text-primary">{loja.name}</h1>
-                <p className="text-lavendergrey text-sm font-sans mt-0.5">{loja.neighborhood} · {loja.city}</p>
+                <p className="text-lavendergrey text-sm font-sans" style={{ marginTop: "4px" }}>{loja.neighborhood} · {loja.city}</p>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center" style={{ gap: "12px" }}>
                 {loja.status === "PENDING" && (
                   <span className="px-4 py-1.5 rounded-full bg-yellow-100 text-yellow-700 text-xs font-bold border border-yellow-200">
                     ⏳ Aguardando aprovação
@@ -103,60 +107,70 @@ export default async function PainelPage() {
             </div>
 
             {/* Cards de métricas — RF05 */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
-              <div className="bg-white rounded-card p-card-inner shadow-sm border border-lavendergrey/10">
-                <p className="text-lavendergrey text-xs font-sans uppercase tracking-wide mb-1">Views da loja</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: "20px", marginBottom: "40px" }}>
+              <div className="bg-white rounded-card shadow-sm border border-lavendergrey/10" style={{ padding: "24px" }}>
+                <p className="text-lavendergrey text-xs font-sans uppercase tracking-wide" style={{ marginBottom: "8px" }}>Views da loja</p>
                 <p className="font-display font-black text-3xl text-text-primary">{loja.viewsCount.toLocaleString("pt-BR")}</p>
               </div>
-              <div className="bg-white rounded-card p-card-inner shadow-sm border border-lavendergrey/10">
-                <p className="text-lavendergrey text-xs font-sans uppercase tracking-wide mb-1">Produtos ativos</p>
+              <div className="bg-white rounded-card shadow-sm border border-lavendergrey/10" style={{ padding: "24px" }}>
+                <p className="text-lavendergrey text-xs font-sans uppercase tracking-wide" style={{ marginBottom: "8px" }}>Produtos ativos</p>
                 <p className="font-display font-black text-3xl text-text-primary">{loja._count.products}</p>
               </div>
-              <div className="bg-white rounded-card p-card-inner shadow-sm border border-lavendergrey/10">
-                <p className="text-lavendergrey text-xs font-sans uppercase tracking-wide mb-1">Categorias</p>
+              <div className="bg-white rounded-card shadow-sm border border-lavendergrey/10" style={{ padding: "24px" }}>
+                <p className="text-lavendergrey text-xs font-sans uppercase tracking-wide" style={{ marginBottom: "8px" }}>Categorias</p>
                 <p className="font-display font-black text-3xl text-text-primary">{loja.categories.length}</p>
               </div>
             </div>
 
             {/* Ações rápidas */}
-            <div className="flex gap-3 mb-10 flex-wrap">
+            <div className="flex flex-wrap" style={{ gap: "12px", marginBottom: "40px" }}>
               <Link
                 href="/painel/produtos/novo"
-                className="flex items-center gap-2 bg-mauve text-text-primary px-5 py-2.5 rounded-full font-semibold text-sm hover:bg-blushpop transition-colors shadow-sm"
+                className="flex items-center bg-mauve text-text-primary rounded-full font-semibold text-sm hover:bg-blushpop transition-colors shadow-sm"
+                style={{ gap: "8px", padding: "12px 20px" }}
               >
                 + Adicionar produto
               </Link>
               <Link
                 href="/painel/loja/editar"
-                className="flex items-center gap-2 border border-lavendergrey/30 text-text-primary px-5 py-2.5 rounded-full font-semibold text-sm hover:border-mauve hover:bg-mauve/10 transition-all"
+                className="flex items-center border border-lavendergrey/30 text-text-primary rounded-full font-semibold text-sm hover:border-mauve hover:bg-mauve/10 transition-all"
+                style={{ gap: "8px", padding: "12px 20px" }}
               >
                 Editar dados da loja
               </Link>
             </div>
 
             {/* Lista de produtos */}
-            <h2 className="font-display font-bold text-lg text-text-primary mb-6">Meus Produtos</h2>
+            <h2 className="font-display font-bold text-lg text-text-primary" style={{ marginBottom: "20px" }}>Meus Produtos</h2>
             {loja.products.length === 0 ? (
-              <div className="bg-white rounded-card p-8 text-center border border-lavendergrey/10 shadow-sm">
-                <p className="text-lavendergrey font-sans text-sm mb-4">Você ainda não tem produtos cadastrados.</p>
-                <Link href="/painel/produtos/novo" className="inline-block bg-aquamarine text-text-primary px-6 py-2.5 rounded-full font-semibold text-sm hover:bg-aquamarine/80 transition-colors">
+              <div className="bg-white rounded-card text-center border border-lavendergrey/10 shadow-sm" style={{ padding: "40px 32px" }}>
+                <p className="text-lavendergrey font-sans text-sm" style={{ marginBottom: "16px" }}>Você ainda não tem produtos cadastrados.</p>
+                <Link
+                  href="/painel/produtos/novo"
+                  className="inline-block bg-aquamarine text-text-primary rounded-full font-semibold text-sm hover:bg-aquamarine/80 transition-colors"
+                  style={{ padding: "12px 24px" }}
+                >
                   Adicionar primeiro produto
                 </Link>
               </div>
             ) : (
-              <ul className="space-y-3">
+              <ul style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                 {loja.products.map((produto) => {
                   const img = produto.images[0];
                   return (
-                    <li key={produto.id} className="flex items-center gap-4 bg-white rounded-card px-4 py-3 shadow-sm border border-lavendergrey/10 hover:border-mauve/30 transition-colors">
-                      <div className="w-12 h-12 rounded-lg overflow-hidden bg-mauve/10 flex-shrink-0">
+                    <li
+                      key={produto.id}
+                      className="flex items-center bg-white rounded-card shadow-sm border border-lavendergrey/10 hover:border-mauve/30 transition-colors"
+                      style={{ gap: "16px", padding: "16px" }}
+                    >
+                      <div className="rounded-lg overflow-hidden bg-mauve/10 flex-shrink-0" style={{ width: "48px", height: "48px" }}>
                         {img && (
                           <SafeImage src={img.url} alt="" width={48} height={48} className="w-full h-full object-cover" />
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-display font-semibold text-text-primary text-sm truncate">{produto.name}</p>
-                        <p className="text-lavendergrey text-xs font-sans">
+                        <p className="text-lavendergrey text-xs font-sans" style={{ marginTop: "2px" }}>
                           {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(Number(produto.price))}
                           {" · "}
                           {produto.viewsCount} view{produto.viewsCount !== 1 ? "s" : ""}

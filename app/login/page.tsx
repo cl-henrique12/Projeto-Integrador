@@ -32,18 +32,35 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-aquamarine/20 via-base to-blushpop/20 flex items-center justify-center p-4">
-      <div className="bg-white rounded-card shadow-xl p-10 max-w-md w-full">
-        <div className="text-center">
-          <div className="w-14 h-14 rounded-full bg-blushpop flex items-center justify-center mx-auto mb-4">
+      {/* Card principal — mais padding interno */}
+      <div
+        className="bg-white rounded-card shadow-xl max-w-md w-full"
+        style={{ padding: '48px 40px 36px 40px' }}
+      >
+        {/* Cabeçalho — mais espaço abaixo da logo e do título */}
+        <div className="text-center" style={{ marginBottom: '32px' }}>
+          <div
+            className="rounded-full bg-blushpop flex items-center justify-center mx-auto"
+            style={{ width: '56px', height: '56px', marginBottom: '16px' }}
+          >
             <span className="font-display font-black text-text-primary">GKF</span>
           </div>
           <h1 className="font-display font-black text-2xl text-text-primary">Entrar no Geekfy</h1>
-          <p className="text-lavendergrey text-sm mt-1 font-sans">Acesse o painel da sua loja</p>
+          <p className="text-lavendergrey text-sm font-sans" style={{ marginTop: '8px' }}>
+            Acesse o painel da sua loja
+          </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-6">
+        <form onSubmit={handleSubmit} className="flex flex-col" style={{ gap: '20px' }}>
+          {/* Campo E-mail */}
           <div>
-            <label htmlFor="login-email" className="block text-xs font-semibold text-text-primary mb-1.5 font-sans">E-mail</label>
+            <label
+              htmlFor="login-email"
+              className="block text-xs font-semibold text-text-primary font-sans"
+              style={{ marginBottom: '8px' }}
+            >
+              E-mail
+            </label>
             <input
               id="login-email"
               type="email"
@@ -51,12 +68,20 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="seu@email.com"
-              className="w-full px-4 py-3 rounded-card border border-lavendergrey/30 text-text-primary text-sm font-sans focus:outline-none focus:border-mauve focus:ring-2 focus:ring-mauve/20 transition-all"
+              className="w-full rounded-card border border-lavendergrey/30 text-text-primary text-sm font-sans focus:outline-none focus:border-mauve focus:ring-2 focus:ring-mauve/20 transition-all"
+              style={{ padding: '12px 16px' }}
             />
           </div>
 
+          {/* Campo Senha */}
           <div>
-            <label htmlFor="login-senha" className="block text-xs font-semibold text-text-primary mb-1.5 font-sans">Senha</label>
+            <label
+              htmlFor="login-senha"
+              className="block text-xs font-semibold text-text-primary font-sans"
+              style={{ marginBottom: '8px' }}
+            >
+              Senha
+            </label>
             <input
               id="login-senha"
               type="password"
@@ -64,29 +89,41 @@ export default function LoginPage() {
               onChange={(e) => setSenha(e.target.value)}
               required
               placeholder="Sua senha"
-              className="w-full px-4 py-3 rounded-card border border-lavendergrey/30 text-text-primary text-sm font-sans focus:outline-none focus:border-mauve focus:ring-2 focus:ring-mauve/20 transition-all"
+              className="w-full rounded-card border border-lavendergrey/30 text-text-primary text-sm font-sans focus:outline-none focus:border-mauve focus:ring-2 focus:ring-mauve/20 transition-all"
+              style={{ padding: '12px 16px' }}
             />
           </div>
 
           {erro && (
-            <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+            <div
+              className="bg-red-50 border border-red-200 rounded-lg"
+              style={{ padding: '12px 16px' }}
+            >
               <p className="text-red-600 text-sm font-sans">{erro}</p>
             </div>
           )}
 
+          {/* Botão — espaço acima + altura generosa */}
           <button
             id="btn-login"
             type="submit"
             disabled={carregando}
-            className="bg-mauve text-text-primary py-3.5 rounded-full font-bold text-sm hover:bg-blushpop transition-colors shadow-md disabled:opacity-60 mt-6"
+            className="bg-mauve text-text-primary rounded-full font-bold text-sm hover:bg-blushpop transition-colors shadow-md disabled:opacity-60"
+            style={{ padding: '16px 24px', marginTop: '8px', width: '100%', border: 'none', cursor: carregando ? 'not-allowed' : 'pointer' }}
           >
             {carregando ? "Entrando..." : "Entrar →"}
           </button>
         </form>
 
-        <p className="text-center text-xs text-lavendergrey mt-4 font-sans">
+        {/* Rodapé — espaço acima */}
+        <p
+          className="text-center text-xs text-lavendergrey font-sans"
+          style={{ marginTop: '24px', paddingBottom: '4px' }}
+        >
           Ainda não tem conta?{" "}
-          <Link href="/cadastro" className="text-mauve hover:underline font-semibold">Cadastrar minha loja</Link>
+          <Link href="/cadastro" className="text-mauve hover:underline font-semibold">
+            Cadastrar minha loja
+          </Link>
         </p>
       </div>
     </main>

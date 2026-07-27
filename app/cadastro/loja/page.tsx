@@ -74,17 +74,23 @@ export default function CadastroLojaPage() {
   if (sucesso) {
     return (
       <main className="min-h-screen bg-gradient-to-br from-blushpop/30 via-base to-mauve/20 flex items-center justify-center p-4">
-        <div className="bg-white rounded-card shadow-xl p-8 max-w-md w-full text-center">
-          <div className="w-16 h-16 bg-aquamarine rounded-full flex items-center justify-center mx-auto mb-4">
+        <div
+          className="bg-white rounded-card shadow-xl max-w-md w-full text-center"
+          style={{ padding: "48px 40px" }}
+        >
+          <div
+            className="bg-aquamarine rounded-full flex items-center justify-center mx-auto"
+            style={{ width: "64px", height: "64px", marginBottom: "20px" }}
+          >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-8 h-8 text-text-primary">
               <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
             </svg>
           </div>
-          <h1 className="font-display font-black text-2xl text-text-primary mb-2">Loja cadastrada!</h1>
-          <p className="text-lavendergrey font-sans text-sm mb-6">
+          <h1 className="font-display font-black text-2xl text-text-primary" style={{ marginBottom: "12px" }}>Loja cadastrada!</h1>
+          <p className="text-lavendergrey font-sans text-sm" style={{ marginBottom: "28px" }}>
             Sua loja foi enviada para aprovação da equipe Geekfy. Você será notificado por e-mail quando for aprovada.
           </p>
-          <a href="/painel" className="inline-block bg-mauve text-text-primary px-6 py-3 rounded-full font-bold text-sm hover:bg-blushpop transition-colors">
+          <a href="/painel" className="inline-block bg-mauve text-text-primary rounded-full font-bold text-sm hover:bg-blushpop transition-colors" style={{ padding: "14px 28px" }}>
             Ir para o painel →
           </a>
         </div>
@@ -93,54 +99,130 @@ export default function CadastroLojaPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blushpop/20 via-base to-aquamarine/10 py-12 px-4">
-      <div className="max-w-xl mx-auto bg-white rounded-card shadow-xl p-8">
-        <h1 className="font-display font-black text-2xl text-text-primary mb-1">Dados da sua loja</h1>
-        <p className="text-lavendergrey text-sm font-sans mb-6">Preencha o perfil da sua loja geek. Quanto mais completo, melhor!</p>
+    <main className="min-h-screen bg-gradient-to-br from-blushpop/20 via-base to-aquamarine/10" style={{ padding: "48px 16px" }}>
+      <div className="max-w-xl mx-auto bg-white rounded-card shadow-xl" style={{ padding: "48px 40px" }}>
+        <h1 className="font-display font-black text-2xl text-text-primary" style={{ marginBottom: "8px" }}>Dados da sua loja</h1>
+        <p className="text-lavendergrey text-sm font-sans" style={{ marginBottom: "32px" }}>
+          Preencha o perfil da sua loja geek. Quanto mais completo, melhor!
+        </p>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+        <form onSubmit={handleSubmit} className="flex flex-col" style={{ gap: "24px" }}>
           {/* Nome */}
           <div>
-            <label htmlFor="loja-nome" className="block text-xs font-semibold text-text-primary mb-1.5">Nome da loja *</label>
-            <input id="loja-nome" type="text" required value={form.nome} onChange={e => setForm(f => ({...f, nome: e.target.value}))}
-              placeholder="Ex: Coruja Geek" className="input-field" />
+            <label
+              htmlFor="loja-nome"
+              className="block text-xs font-semibold text-text-primary"
+              style={{ marginBottom: "8px" }}
+            >
+              Nome da loja *
+            </label>
+            <input
+              id="loja-nome"
+              type="text"
+              required
+              value={form.nome}
+              onChange={e => setForm(f => ({...f, nome: e.target.value}))}
+              placeholder="Ex: Coruja Geek"
+              className="w-full rounded-card border border-lavendergrey/30 text-text-primary text-sm font-sans focus:outline-none focus:border-mauve focus:ring-2 focus:ring-mauve/20 transition-all"
+              style={{ padding: "12px 16px" }}
+            />
           </div>
 
           {/* Descrição */}
           <div>
-            <label htmlFor="loja-descricao" className="block text-xs font-semibold text-text-primary mb-1.5">Descrição</label>
-            <textarea id="loja-descricao" rows={3} value={form.descricao} onChange={e => setForm(f => ({...f, descricao: e.target.value}))}
-              placeholder="Conte o que sua loja vende..." className="w-full px-4 py-3 rounded-card border border-lavendergrey/30 text-text-primary text-sm font-sans focus:outline-none focus:border-mauve focus:ring-2 focus:ring-mauve/20 resize-none transition-all" />
+            <label
+              htmlFor="loja-descricao"
+              className="block text-xs font-semibold text-text-primary"
+              style={{ marginBottom: "8px" }}
+            >
+              Descrição
+            </label>
+            <textarea
+              id="loja-descricao"
+              rows={3}
+              value={form.descricao}
+              onChange={e => setForm(f => ({...f, descricao: e.target.value}))}
+              placeholder="Conte o que sua loja vende..."
+              className="w-full rounded-card border border-lavendergrey/30 text-text-primary text-sm font-sans focus:outline-none focus:border-mauve focus:ring-2 focus:ring-mauve/20 resize-none transition-all"
+              style={{ padding: "12px 16px" }}
+            />
           </div>
 
           {/* WhatsApp */}
           <div>
-            <label htmlFor="loja-whatsapp" className="block text-xs font-semibold text-text-primary mb-1.5">WhatsApp * <span className="text-lavendergrey font-normal">(com DDD, sem espaços)</span></label>
-            <input id="loja-whatsapp" type="tel" required value={form.whatsapp} onChange={e => setForm(f => ({...f, whatsapp: e.target.value}))}
-              placeholder="92991234567" className="w-full px-4 py-3 rounded-card border border-lavendergrey/30 text-text-primary text-sm font-sans focus:outline-none focus:border-mauve focus:ring-2 focus:ring-mauve/20 transition-all" />
+            <label
+              htmlFor="loja-whatsapp"
+              className="block text-xs font-semibold text-text-primary"
+              style={{ marginBottom: "8px" }}
+            >
+              WhatsApp * <span className="text-lavendergrey font-normal">(com DDD, sem espaços)</span>
+            </label>
+            <input
+              id="loja-whatsapp"
+              type="tel"
+              required
+              value={form.whatsapp}
+              onChange={e => setForm(f => ({...f, whatsapp: e.target.value}))}
+              placeholder="92991234567"
+              className="w-full rounded-card border border-lavendergrey/30 text-text-primary text-sm font-sans focus:outline-none focus:border-mauve focus:ring-2 focus:ring-mauve/20 transition-all"
+              style={{ padding: "12px 16px" }}
+            />
           </div>
 
           {/* Instagram */}
           <div>
-            <label htmlFor="loja-instagram" className="block text-xs font-semibold text-text-primary mb-1.5">Instagram <span className="text-lavendergrey font-normal">(opcional)</span></label>
-            <input id="loja-instagram" type="text" value={form.instagram} onChange={e => setForm(f => ({...f, instagram: e.target.value}))}
-              placeholder="@minhaloja" className="w-full px-4 py-3 rounded-card border border-lavendergrey/30 text-text-primary text-sm font-sans focus:outline-none focus:border-mauve focus:ring-2 focus:ring-mauve/20 transition-all" />
+            <label
+              htmlFor="loja-instagram"
+              className="block text-xs font-semibold text-text-primary"
+              style={{ marginBottom: "8px" }}
+            >
+              Instagram <span className="text-lavendergrey font-normal">(opcional)</span>
+            </label>
+            <input
+              id="loja-instagram"
+              type="text"
+              value={form.instagram}
+              onChange={e => setForm(f => ({...f, instagram: e.target.value}))}
+              placeholder="@minhaloja"
+              className="w-full rounded-card border border-lavendergrey/30 text-text-primary text-sm font-sans focus:outline-none focus:border-mauve focus:ring-2 focus:ring-mauve/20 transition-all"
+              style={{ padding: "12px 16px" }}
+            />
           </div>
 
           {/* Bairro */}
           <div>
-            <label htmlFor="loja-bairro" className="block text-xs font-semibold text-text-primary mb-1.5">Bairro em Manaus <span className="text-lavendergrey font-normal">(se tiver loja física)</span></label>
-            <input id="loja-bairro" type="text" value={form.bairro} onChange={e => setForm(f => ({...f, bairro: e.target.value}))}
-              placeholder="Ex: Centro, Adrianópolis..." className="w-full px-4 py-3 rounded-card border border-lavendergrey/30 text-text-primary text-sm font-sans focus:outline-none focus:border-mauve focus:ring-2 focus:ring-mauve/20 transition-all" />
+            <label
+              htmlFor="loja-bairro"
+              className="block text-xs font-semibold text-text-primary"
+              style={{ marginBottom: "8px" }}
+            >
+              Bairro em Manaus <span className="text-lavendergrey font-normal">(se tiver loja física)</span>
+            </label>
+            <input
+              id="loja-bairro"
+              type="text"
+              value={form.bairro}
+              onChange={e => setForm(f => ({...f, bairro: e.target.value}))}
+              placeholder="Ex: Centro, Adrianópolis..."
+              className="w-full rounded-card border border-lavendergrey/30 text-text-primary text-sm font-sans focus:outline-none focus:border-mauve focus:ring-2 focus:ring-mauve/20 transition-all"
+              style={{ padding: "12px 16px" }}
+            />
           </div>
 
           {/* Categorias */}
           <div>
-            <p className="text-xs font-semibold text-text-primary mb-2">Categorias * <span className="text-lavendergrey font-normal">(selecione pelo menos 1)</span></p>
-            <div className="flex flex-wrap gap-2">
+            <p className="text-xs font-semibold text-text-primary" style={{ marginBottom: "12px" }}>
+              Categorias * <span className="text-lavendergrey font-normal">(selecione pelo menos 1)</span>
+            </p>
+            <div className="flex flex-wrap" style={{ gap: "8px" }}>
               {categorias.map(cat => (
-                <button key={cat.id} type="button" onClick={() => toggleCategoria(cat.id)}
-                  className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-all ${categoriasSelect.includes(cat.id) ? "bg-mauve text-text-primary shadow" : "bg-lavendergrey/10 text-lavendergrey hover:bg-mauve/20"}`}>
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => toggleCategoria(cat.id)}
+                  className={`rounded-full text-sm font-semibold transition-all ${categoriasSelect.includes(cat.id) ? "bg-mauve text-text-primary shadow" : "bg-lavendergrey/10 text-lavendergrey hover:bg-mauve/20"}`}
+                  style={{ padding: "8px 16px" }}
+                >
                   {cat.name}
                 </button>
               ))}
@@ -149,13 +231,21 @@ export default function CadastroLojaPage() {
           </div>
 
           {erro && (
-            <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+            <div
+              className="bg-red-50 border border-red-200 rounded-lg"
+              style={{ padding: "12px 16px" }}
+            >
               <p className="text-red-600 text-sm font-sans">{erro}</p>
             </div>
           )}
 
-          <button id="btn-cadastrar-loja" type="submit" disabled={carregando}
-            className="bg-mauve text-text-primary py-3.5 rounded-full font-bold text-sm hover:bg-blushpop transition-colors shadow-md disabled:opacity-60 mt-2">
+          <button
+            id="btn-cadastrar-loja"
+            type="submit"
+            disabled={carregando}
+            className="bg-mauve text-text-primary rounded-full font-bold text-sm hover:bg-blushpop transition-colors shadow-md disabled:opacity-60"
+            style={{ padding: "16px 24px", marginTop: "8px", width: "100%", border: "none", cursor: carregando ? "not-allowed" : "pointer" }}
+          >
             {carregando ? "Enviando para aprovação..." : "Cadastrar loja →"}
           </button>
         </form>
