@@ -33,7 +33,7 @@ type Props = Omit<ImageProps, "onError">;
 export function SafeImage(props: Props) {
   const [failed, setFailed] = useState(false);
 
-  if (failed) {
+  if (failed || !props.src) {
     return (
       <div className="w-full h-full flex items-center justify-center bg-lavendergrey/10">
         <ImageOffIcon />
