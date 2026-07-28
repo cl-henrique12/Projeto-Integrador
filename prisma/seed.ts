@@ -5,30 +5,38 @@ const prisma = new PrismaClient()
 async function main() {
   console.log('🌱 Iniciando seed do banco Geekfy...')
 
-  // ── Categorias ──────────────────────────────────────────────────────────
-  const categorias = await Promise.all([
-    prisma.category.upsert({ where: { slug: 'anime' },       update: {}, create: { name: 'Anime',        slug: 'anime' } }),
-    prisma.category.upsert({ where: { slug: 'manga' },       update: {}, create: { name: 'Mangá',        slug: 'manga' } }),
-    prisma.category.upsert({ where: { slug: 'tcg' },         update: {}, create: { name: 'TCG',          slug: 'tcg' } }),
-    prisma.category.upsert({ where: { slug: 'board-games' }, update: {}, create: { name: 'Board Games',  slug: 'board-games' } }),
-    prisma.category.upsert({ where: { slug: 'cosplay' },     update: {}, create: { name: 'Cosplay',      slug: 'cosplay' } }),
-    prisma.category.upsert({ where: { slug: 'colecionar' },  update: {}, create: { name: 'Colecionáveis',slug: 'colecionar' } }),
-    prisma.category.upsert({ where: { slug: 'camisas' },     update: {}, create: { name: 'Camisas',      slug: 'camisas' } }),
-    prisma.category.upsert({ where: { slug: 'acessorios' },  update: {}, create: { name: 'Acessórios',   slug: 'acessorios' } }),
-  ])
+  // ── Categorias (sequencial para respeitar connection_limit=1) ──────────
+  const categoriasData = [
+    { name: 'Anime',        slug: 'anime' },
+    { name: 'Mangá',        slug: 'manga' },
+    { name: 'TCG',          slug: 'tcg' },
+    { name: 'Board Games',  slug: 'board-games' },
+    { name: 'Cosplay',      slug: 'cosplay' },
+    { name: 'Colecionáveis',slug: 'colecionar' },
+    { name: 'Camisas',      slug: 'camisas' },
+    { name: 'Acessórios',   slug: 'acessorios' },
+  ]
+  const categorias = []
+  for (const cat of categoriasData) {
+    categorias.push(await prisma.category.upsert({ where: { slug: cat.slug }, update: {}, create: cat }))
+  }
   console.log(`✅ ${categorias.length} categorias criadas`)
 
-  // ── Tags de fandom ──────────────────────────────────────────────────────
-  const tags = await Promise.all([
-    prisma.tag.upsert({ where: { slug: 'one-piece' },        update: {}, create: { name: 'One Piece',         slug: 'one-piece',        synonyms: ['luffy', 'piratas', 'manga pirata'] } }),
-    prisma.tag.upsert({ where: { slug: 'naruto' },           update: {}, create: { name: 'Naruto',            slug: 'naruto',           synonyms: ['shinobi', 'ninja', 'akatsuki', 'konoha'] } }),
-    prisma.tag.upsert({ where: { slug: 'pokemon' },          update: {}, create: { name: 'Pokémon',           slug: 'pokemon',          synonyms: ['pikachu', 'ash', 'treinador'] } }),
-    prisma.tag.upsert({ where: { slug: 'dnd' },              update: {}, create: { name: 'D&D',               slug: 'dnd',              synonyms: ['dungeons and dragons', 'rpg de mesa', 'fantasia', 'dados'] } }),
-    prisma.tag.upsert({ where: { slug: 'magic-gathering' },  update: {}, create: { name: 'Magic: The Gathering', slug: 'magic-gathering', synonyms: ['mtg', 'cartas magic', 'TCG'] } }),
-    prisma.tag.upsert({ where: { slug: 'attack-on-titan' },  update: {}, create: { name: 'Attack on Titan',   slug: 'attack-on-titan',  synonyms: ['shingeki no kyojin', 'titãs', 'eren'] } }),
-    prisma.tag.upsert({ where: { slug: 'dragon-ball' },      update: {}, create: { name: 'Dragon Ball',       slug: 'dragon-ball',      synonyms: ['goku', 'saiyajin', 'dbz'] } }),
-    prisma.tag.upsert({ where: { slug: 'kpop' },             update: {}, create: { name: 'K-Pop',             slug: 'kpop',             synonyms: ['korea', 'idol', 'bts', 'blackpink'] } }),
-  ])
+  // ── Tags de fandom (sequencial) ────────────────────────────────────────
+  const tagsData = [
+    { name: 'One Piece',         slug: 'one-piece',        synonyms: ['luffy', 'piratas', 'manga pirata'] },
+    { name: 'Naruto',            slug: 'naruto',           synonyms: ['shinobi', 'ninja', 'akatsuki', 'konoha'] },
+    { name: 'Pokémon',           slug: 'pokemon',          synonyms: ['pikachu', 'ash', 'treinador'] },
+    { name: 'D&D',               slug: 'dnd',              synonyms: ['dungeons and dragons', 'rpg de mesa', 'fantasia', 'dados'] },
+    { name: 'Magic: The Gathering', slug: 'magic-gathering', synonyms: ['mtg', 'cartas magic', 'TCG'] },
+    { name: 'Attack on Titan',   slug: 'attack-on-titan',  synonyms: ['shingeki no kyojin', 'titãs', 'eren'] },
+    { name: 'Dragon Ball',       slug: 'dragon-ball',      synonyms: ['goku', 'saiyajin', 'dbz'] },
+    { name: 'K-Pop',             slug: 'kpop',             synonyms: ['korea', 'idol', 'bts', 'blackpink'] },
+  ]
+  const tags = []
+  for (const tag of tagsData) {
+    tags.push(await prisma.tag.upsert({ where: { slug: tag.slug }, update: {}, create: tag }))
+  }
   console.log(`✅ ${tags.length} tags de fandom criadas`)
 
   // ── Usuário lojista 1 ───────────────────────────────────────────────────
@@ -306,8 +314,12 @@ async function main() {
   })
   console.log(`✅ 6 produtos criados`)
 
-  // ── Evento ───────────────────────────────────────────────────────────────
-  const evento = await prisma.event.upsert({
+  // ── Eventos (EXEMPLO — substituir por dados reais) ─────────────────────
+  // Coordenadas aproximadas do centro de Manaus para demonstração.
+  // Substituir pelos dados reais quando os eventos forem cadastrados.
+
+  // Evento 1: futuro (já existia)
+  const evento1 = await prisma.event.upsert({
     where: { id: 'seed-event-001' },
     update: {},
     create: {
@@ -317,6 +329,7 @@ async function main() {
       date: new Date('2026-08-15T10:00:00-04:00'),
       address: 'Studio 5 Centro de Convenções, Av. Mário Ypiranga Monteiro, 1826',
       neighborhood: 'Adrianópolis',
+      // EXEMPLO — coordenadas aproximadas de Manaus
       latitude: -3.0921,
       longitude: -59.9856,
       stores: {
@@ -327,14 +340,58 @@ async function main() {
       },
     },
   })
-  console.log(`✅ Evento criado: ${evento.name}`)
+
+  // Evento 2: futuro — EXEMPLO
+  const evento2 = await prisma.event.upsert({
+    where: { id: 'seed-event-002' },
+    update: {},
+    create: {
+      id: 'seed-event-002',
+      name: 'Feira Otaku Manaus',
+      description: 'Feira de cultura japonesa com cosplay, mangás, comida e música. Traga a família!',
+      date: new Date('2026-09-20T09:00:00-04:00'),
+      address: 'Centro Cultural Povos da Amazônia, Av. Silves, 2222',
+      neighborhood: 'Distrito Industrial',
+      // EXEMPLO — coordenadas aproximadas (sul do centro de Manaus)
+      latitude: -3.130,
+      longitude: -60.023,
+      stores: {
+        create: [
+          { storeId: loja1.id, confirmed: true },
+        ],
+      },
+    },
+  })
+
+  // Evento 3: passado — EXEMPLO
+  const evento3 = await prisma.event.upsert({
+    where: { id: 'seed-event-003' },
+    update: {},
+    create: {
+      id: 'seed-event-003',
+      name: 'Encontro Gamer Centro',
+      description: 'Encontro de gamers e entusiastas de board games no Centro Histórico. Jogos e torneios o dia todo!',
+      date: new Date('2025-12-10T14:00:00-04:00'),
+      address: 'Largo de São Sebastião, 2 — Teatro Amazonas',
+      neighborhood: 'Centro',
+      // EXEMPLO — coordenadas aproximadas (centro histórico de Manaus)
+      latitude: -3.1302,
+      longitude: -60.0233,
+      stores: {
+        create: [
+          { storeId: loja2.id, confirmed: true },
+        ],
+      },
+    },
+  })
+  console.log(`✅ 3 eventos criados: ${evento1.name}, ${evento2.name}, ${evento3.name}`)
 
   console.log('\n🎉 Seed concluído com sucesso!')
   console.log('   Lojas APPROVED: Coruja Geek, Liry Closet')
   console.log('   Lojas PENDING:  AnimEnsiom')
   console.log('   Produtos: 6 (3 + 2 + 1)')
   console.log('   Tags de fandom: 8')
-  console.log('   Evento futuro: GeekCon Manaus 2026')
+  console.log('   Eventos: 3 (2 futuros + 1 passado)')
 }
 
 main()
