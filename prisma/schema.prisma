@@ -80,8 +80,9 @@ model Store {
   latitude     Float?
   longitude    Float?
 
-  status       StoreStatus @default(PENDING)
-  viewsCount   Int         @default(0) // RF05: views recebidas
+  status          StoreStatus @default(PENDING)
+  rejectionReason String?
+  viewsCount      Int         @default(0) // RF05: views recebidas
 
   owner        User        @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId      String      @unique

@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
-// PATCH /api/admin/lojas/[id]
+// PATCH /api/admin/produtos/[id]
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -17,7 +17,6 @@ export async function PATCH(
       return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
     }
 
-    // Verificar se é ADMIN
     const dbUser = await prisma.user.findUnique({
       where: { email: user.email! },
     });
@@ -27,32 +26,30 @@ export async function PATCH(
 
     const { id } = await params;
     const body = await request.json();
-    const { status, reason } = body;
+    const { status, name, description, price } = body;
 
-    if (!["APPROVED", "REJECTED", "SUSPENDED", "PENDING"].includes(status)) {
-      return NextResponse.json({ error: "Status inválido" }, { status: 400 });
-    }
+    const updateData: {
+      status?: "ACTIVE" | "INACTIVE";
+      name?: string;
+      description?: string | null;
+      price?: number;
+    } = {};
 
-    if (status === "REJECTED" && (!reason || reason.trim() === "")) {
-      return NextResponse.json(
-        { error: "É obrigatório fornecer um motivo para a rejeição da loja." },
-        { status: 400 }
-      );
-    }
+    if (status) updateData.status = status;
+    if (name !== undefined) updateData.name = name;
+    if (description !== undefined) updateData.description = description;
+    if (price !== undefined) updateData.price = parseFloat(price);
 
-    const updatedStore = await prisma.store.update({
+    const updatedProduct = await prisma.product.update({
       where: { id },
-      data: {
-        status,
-        rejectionReason: status === "REJECTED" ? reason : null,
-      },
+      data: updateData,
     });
 
-    return NextResponse.json(updatedStore);
+    return NextResponse.json(updatedProduct);
   } catch (error) {
-    console.error("Erro ao atualizar loja:", error);
+    console.error("Erro ao moderar produto:", error);
     return NextResponse.json(
-      { error: "Erro interno ao processar requisição" },
+      { error: "Erro interno ao moderar produto" },
       { status: 500 }
     );
   }

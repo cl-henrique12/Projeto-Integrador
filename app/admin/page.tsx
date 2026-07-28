@@ -3,138 +3,287 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import AdminStoreActions from "./AdminStoreActions";
+import AdminLayout from "./AdminLayout";
 
 export const metadata: Metadata = {
-  title: "Admin — Painel de Aprovação | Geekfy",
+  title: "Admin — Dashboard de Moderação | Geekfy",
 };
 
 export default async function AdminPage() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) redirect("/login");
 
-  // Verificar role ADMIN via Prisma
-  const dbUser = await prisma.user.findUnique({ where: { email: user.email! } });
+  // Verificar role ADMIN no Prisma
+  const dbUser = await prisma.user.findUnique({
+    where: { email: user.email! },
+  });
   if (!dbUser || dbUser.role !== "ADMIN") {
     redirect("/painel");
   }
 
-  const lojasPendentes = await prisma.store.findMany({
+  // Contagens para os cards de moderação
+  const lojasPendentesCount = await prisma.store.count({
     where: { status: "PENDING" },
-    include: {
-      owner: { select: { name: true, email: true } },
-      categories: { include: { category: true } },
-      _count: { select: { products: true } },
-    },
-    orderBy: { createdAt: "asc" },
   });
+  const lojasAprovadasCount = await prisma.store.count({
+    where: { status: "APPROVED" },
+  });
+  const produtosTotalCount = await prisma.product.count();
+  const categoriasCount = await prisma.category.count();
+  const tagsCount = await prisma.tag.count();
+  const eventosCount = await prisma.event.count();
 
-  const lojasAprovadas = await prisma.store.count({ where: { status: "APPROVED" } });
-  const totalProdutos = await prisma.product.count({ where: { status: "ACTIVE" } });
-  const totalBuscas = await prisma.searchQuery.count();
+  const adminActions = [
+    {
+      id: "lojas",
+      title: "1. Revisar Cadastro de Loja",
+      description:
+        "Analise solicitações de novas lojas, verifique dados e aprove ou rejeite com motivo.",
+      href: "/admin/lojas",
+      badge: lojasPendentesCount > 0 ? `${lojasPendentesCount} pendente(s)` : "Em dia",
+      badgeColor: lojasPendentesCount > 0 ? "#FFD166" : "#8EF8D5",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" style={{ width: "2rem", height: "2rem", color: "#1A1A2E" }}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36rem-4.5 0H9m-4.5 0a2.25 2.25 0 0 1-2.25-2.25V5.25A2.25 2.25 0 0 1 4.5 3h15a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 19.5 21h-6Z" />
+        </svg>
+      ),
+      metricLabel: "Lojas em análise",
+      metricValue: lojasPendentesCount,
+    },
+    {
+      id: "produtos",
+      title: "2. Moderar Produtos",
+      description:
+        "Busque produtos da plataforma, altere status (Ativo/Inativo) e edite conteúdo impróprio.",
+      href: "/admin/produtos",
+      badge: `${produtosTotalCount} produtos`,
+      badgeColor: "#D3BCFF",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" style={{ width: "2rem", height: "2rem", color: "#1A1A2E" }}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+        </svg>
+      ),
+      metricLabel: "Produtos cadastrados",
+      metricValue: produtosTotalCount,
+    },
+    {
+      id: "categorias-tags",
+      title: "3. Gerenciar Categorias & Tags",
+      description:
+        "CRUD para categorias de lojas e tags de fandom (usadas na busca semântica).",
+      href: "/admin/categorias-tags",
+      badge: `${categoriasCount} cat. / ${tagsCount} tags`,
+      badgeColor: "#FFBFEA",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" style={{ width: "2rem", height: "2rem", color: "#1A1A2E" }}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6 6h.008v.008H6V6Z" />
+        </svg>
+      ),
+      metricLabel: "Total de taxonomias",
+      metricValue: categoriasCount + tagsCount,
+    },
+    {
+      id: "eventos",
+      title: "4. Cadastrar Evento",
+      description:
+        "Cadastre feiras/convenções com seletor no mapa (lat/long) e vincule lojas participantes.",
+      href: "/admin/eventos",
+      badge: `${eventosCount} evento(s)`,
+      badgeColor: "#8EF8D5",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" style={{ width: "2rem", height: "2rem", color: "#1A1A2E" }}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+        </svg>
+      ),
+      metricLabel: "Eventos cadastrados",
+      metricValue: eventosCount,
+    },
+  ];
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-mauve/10 via-base to-blushpop/10">
-      {/* Header admin */}
-      <header className="bg-mauve shadow-sm">
-        <div className="page-container flex items-center justify-between" style={{ paddingTop: "16px", paddingBottom: "16px" }}>
-          <div className="flex items-center" style={{ gap: "12px" }}>
-            <Link href="/" className="font-display font-black text-lg text-text-primary">Geekfy</Link>
-            <span className="px-2 py-0.5 bg-text-primary/10 rounded-full text-xs font-bold text-text-primary">Admin</span>
-          </div>
-          <span className="text-xs text-text-primary/70 font-sans hidden sm:block">{user.email}</span>
-        </div>
-      </header>
-
-      <div className="page-container" style={{ paddingTop: "40px", paddingBottom: "64px" }}>
-        <h1 className="font-display font-black text-2xl text-text-primary" style={{ marginBottom: "8px" }}>Painel Administrativo</h1>
-        <p className="text-lavendergrey text-sm font-sans" style={{ marginBottom: "32px" }}>
-          Gerencie lojas, produtos e conteúdo da plataforma.
+    <AdminLayout userEmail={user.email} activeTab="dashboard">
+      <div style={{ marginBottom: "2rem" }}>
+        <h1
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 900,
+            fontSize: "1.75rem",
+            color: "#1A1A2E",
+            marginBottom: "0.5rem",
+          }}
+        >
+          Painel de Moderação Administrativa
+        </h1>
+        <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.9375rem", color: "#8786A8" }}>
+          Gerencie o ecossistema Geekfy seguindo as etapas de moderação do sistema.
         </p>
+      </div>
 
-        {/* Métricas gerais */}
-        <div className="grid grid-cols-2 sm:grid-cols-4" style={{ gap: "20px", marginBottom: "40px" }}>
-          {[
-            { label: "Lojas aprovadas",  value: lojasAprovadas },
-            { label: "Pendentes",         value: lojasPendentes.length, highlight: lojasPendentes.length > 0 },
-            { label: "Produtos ativos",   value: totalProdutos },
-            { label: "Buscas realizadas", value: totalBuscas },
-          ].map((m) => (
-            <div
-              key={m.label}
-              className={`rounded-card shadow-sm border ${m.highlight ? "bg-yellow-50 border-yellow-200" : "bg-white border-lavendergrey/10"}`}
-              style={{ padding: "20px" }}
-            >
-              <p className="text-lavendergrey text-xs font-sans uppercase tracking-wide" style={{ marginBottom: "8px" }}>{m.label}</p>
-              <p className={`font-display font-black text-2xl ${m.highlight ? "text-yellow-600" : "text-text-primary"}`}>{m.value}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Lojas pendentes */}
-        <h2 className="font-display font-bold text-lg text-text-primary flex items-center" style={{ gap: "8px", marginBottom: "24px" }}>
-          Lojas Pendentes de Aprovação
-          {lojasPendentes.length > 0 && (
-            <span className="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs font-bold rounded-full">{lojasPendentes.length}</span>
-          )}
-        </h2>
-
-        {lojasPendentes.length === 0 ? (
-          <div className="bg-white rounded-card text-center border border-lavendergrey/10 shadow-sm" style={{ padding: "40px 32px" }}>
-            <p className="text-lavendergrey font-sans text-sm">✅ Nenhuma loja pendente de aprovação.</p>
-          </div>
-        ) : (
-          <ul style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-            {lojasPendentes.map((loja) => (
-              <li
-                key={loja.id}
-                className="bg-white rounded-card shadow-sm border border-yellow-100 hover:border-yellow-200 transition-colors"
-                style={{ padding: "24px" }}
+      {/* Grid com os 4 Cards Principais do Fluxograma */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+          gap: "1.25rem",
+          marginBottom: "2.5rem",
+        }}
+      >
+        {adminActions.map((action) => (
+          <Link
+            key={action.id}
+            href={action.href}
+            style={{
+              textDecoration: "none",
+              color: "inherit",
+              backgroundColor: "#FFFFFF",
+              borderRadius: "var(--radius-card)",
+              padding: "1.5rem",
+              border: "1px solid rgba(135,134,168,0.15)",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              transition: "transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease",
+            }}
+          >
+            <div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginBottom: "1rem",
+                }}
               >
-                <div className="flex flex-col sm:flex-row sm:items-start" style={{ gap: "20px" }}>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center" style={{ gap: "8px", marginBottom: "8px" }}>
-                      <h3 className="font-display font-bold text-text-primary text-lg">{loja.name}</h3>
-                      <span className="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs font-bold rounded-full">PENDING</span>
-                    </div>
-                    <p className="text-lavendergrey text-xs font-sans" style={{ marginBottom: "4px" }}>
-                      <strong>Dono:</strong> {loja.owner.name} ({loja.owner.email})
-                    </p>
-                    <p className="text-lavendergrey text-xs font-sans" style={{ marginBottom: "4px" }}>
-                      <strong>WhatsApp:</strong> {loja.whatsapp}
-                      {loja.neighborhood && <> · <strong>Bairro:</strong> {loja.neighborhood}</>}
-                    </p>
-                    {loja.description && (
-                      <p className="text-text-primary/70 text-sm font-sans line-clamp-2" style={{ marginTop: "8px" }}>{loja.description}</p>
-                    )}
-                    <div className="flex flex-wrap" style={{ gap: "6px", marginTop: "10px" }}>
-                      {loja.categories.map(({ category }) => (
-                        <span key={category.id} className="px-2 py-0.5 rounded-full bg-aquamarine/40 text-text-primary text-xs font-semibold">
-                          {category.name}
-                        </span>
-                      ))}
-                    </div>
-                    <p className="text-xs text-lavendergrey" style={{ marginTop: "8px" }}>
-                      {loja._count.products} produto{loja._count.products !== 1 ? "s" : ""} · Cadastrado em {new Date(loja.createdAt).toLocaleDateString("pt-BR")}
-                    </p>
-                  </div>
-
-                  {/* Ações — Client Component para event handlers */}
-                  <AdminStoreActions storeId={loja.id} />
+                <div
+                  style={{
+                    width: "3.25rem",
+                    height: "3.25rem",
+                    borderRadius: "12px",
+                    backgroundColor: "rgba(211,188,255,0.25)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {action.icon}
                 </div>
-              </li>
-            ))}
-          </ul>
-        )}
+                <span
+                  style={{
+                    fontSize: "0.75rem",
+                    fontWeight: 700,
+                    padding: "0.25rem 0.65rem",
+                    borderRadius: "9999px",
+                    backgroundColor: action.badgeColor,
+                    color: "#1A1A2E",
+                  }}
+                >
+                  {action.badge}
+                </span>
+              </div>
 
-        {/* Links rápidos */}
-        <div className="flex flex-wrap" style={{ gap: "12px", marginTop: "40px" }}>
-          <Link href="/lojas" className="text-sm text-mauve hover:underline font-semibold">Ver vitrine pública →</Link>
-          <Link href="/" className="text-sm text-lavendergrey hover:text-text-primary font-semibold">Voltar à home</Link>
+              <h2
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 700,
+                  fontSize: "1.125rem",
+                  color: "#1A1A2E",
+                  marginBottom: "0.5rem",
+                }}
+              >
+                {action.title}
+              </h2>
+              <p
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.8125rem",
+                  color: "#8786A8",
+                  lineHeight: 1.5,
+                  marginBottom: "1.25rem",
+                }}
+              >
+                {action.description}
+              </p>
+            </div>
+
+            <div
+              style={{
+                borderTop: "1px solid rgba(135,134,168,0.1)",
+                paddingTop: "0.875rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.8125rem",
+                  fontWeight: 700,
+                  color: "#7B6CB5",
+                }}
+              >
+                Acessar seção →
+              </span>
+              <span style={{ fontSize: "0.75rem", color: "#8786A8" }}>
+                {action.metricLabel}: <strong>{action.metricValue}</strong>
+              </span>
+            </div>
+          </Link>
+        ))}
+      </div>
+
+      {/* Resumo Rápido do Banco */}
+      <div
+        style={{
+          backgroundColor: "#FFFFFF",
+          borderRadius: "var(--radius-card)",
+          padding: "1.5rem",
+          border: "1px solid rgba(135,134,168,0.15)",
+        }}
+      >
+        <h3
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 700,
+            fontSize: "1rem",
+            color: "#1A1A2E",
+            marginBottom: "1rem",
+          }}
+        >
+          📊 Estatísticas Rápidas do Ecossistema
+        </h3>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+            gap: "1rem",
+          }}
+        >
+          <div style={{ backgroundColor: "#F8F8FC", padding: "1rem", borderRadius: "8px" }}>
+            <p style={{ fontSize: "0.75rem", color: "#8786A8", marginBottom: "0.25rem" }}>Lojas Aprovadas</p>
+            <p style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: "1.5rem", color: "#1A1A2E" }}>{lojasAprovadasCount}</p>
+          </div>
+          <div style={{ backgroundColor: "#F8F8FC", padding: "1rem", borderRadius: "8px" }}>
+            <p style={{ fontSize: "0.75rem", color: "#8786A8", marginBottom: "0.25rem" }}>Lojas Pendentes</p>
+            <p style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: "1.5rem", color: lojasPendentesCount > 0 ? "#D97706" : "#1A1A2E" }}>{lojasPendentesCount}</p>
+          </div>
+          <div style={{ backgroundColor: "#F8F8FC", padding: "1rem", borderRadius: "8px" }}>
+            <p style={{ fontSize: "0.75rem", color: "#8786A8", marginBottom: "0.25rem" }}>Categorias de Loja</p>
+            <p style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: "1.5rem", color: "#1A1A2E" }}>{categoriasCount}</p>
+          </div>
+          <div style={{ backgroundColor: "#F8F8FC", padding: "1rem", borderRadius: "8px" }}>
+            <p style={{ fontSize: "0.75rem", color: "#8786A8", marginBottom: "0.25rem" }}>Tags de Fandom</p>
+            <p style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: "1.5rem", color: "#1A1A2E" }}>{tagsCount}</p>
+          </div>
         </div>
       </div>
-    </main>
+    </AdminLayout>
   );
 }
