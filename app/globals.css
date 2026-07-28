@@ -223,3 +223,25 @@ h6 {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Grid responsivo das lojas — 1 col mobile → 2 col tablet → 3 col desktop */
+.stores-grid {
+  display:             grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap:                 24px;
+  list-style:          none;
+  padding:             0;
+  margin:              0;
+}
+
+@media (min-width: 640px) {
+  .stores-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .stores-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
