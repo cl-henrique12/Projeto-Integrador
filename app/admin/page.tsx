@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
+import AdminStoreActions from "./AdminStoreActions";
 
 export const metadata: Metadata = {
   title: "Admin — Painel de Aprovação | Geekfy",
@@ -120,45 +121,8 @@ export default async function AdminPage() {
                     </p>
                   </div>
 
-                  {/* Ações */}
-                  <div className="flex flex-row sm:flex-col flex-shrink-0" style={{ gap: "8px" }}>
-                    <form action={`/api/admin/lojas/${loja.id}`} method="PATCH">
-                      <input type="hidden" name="status" value="APPROVED" />
-                      <button
-                        id={`btn-aprovar-${loja.id}`}
-                        type="submit"
-                        className="w-full bg-aquamarine text-text-primary rounded-full font-bold text-sm hover:bg-aquamarine/70 transition-colors shadow-sm"
-                        style={{ padding: "10px 20px" }}
-                        onClick={async (e) => {
-                          e.preventDefault();
-                          await fetch(`/api/admin/lojas/${loja.id}`, {
-                            method: "PATCH",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ status: "APPROVED" }),
-                          });
-                          window.location.reload();
-                        }}
-                      >
-                        ✅ Aprovar
-                      </button>
-                    </form>
-                    <button
-                      id={`btn-rejeitar-${loja.id}`}
-                      onClick={async () => {
-                        const motivo = window.prompt("Motivo da rejeição (opcional):");
-                        await fetch(`/api/admin/lojas/${loja.id}`, {
-                          method: "PATCH",
-                          headers: { "Content-Type": "application/json" },
-                          body: JSON.stringify({ status: "REJECTED", reason: motivo }),
-                        });
-                        window.location.reload();
-                      }}
-                      className="border border-red-200 text-red-600 rounded-full font-bold text-sm hover:bg-red-50 transition-colors"
-                      style={{ padding: "10px 20px" }}
-                    >
-                      ❌ Rejeitar
-                    </button>
-                  </div>
+                  {/* Ações — Client Component para event handlers */}
+                  <AdminStoreActions storeId={loja.id} />
                 </div>
               </li>
             ))}
