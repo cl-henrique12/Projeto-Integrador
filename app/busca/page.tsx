@@ -3,6 +3,8 @@ import CategoryNav from "@/app/components/CategoryNav";
 import { SafeImage } from "@/app/components/SafeImage";
 import type { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Busca Inteligente | Geekfy",
   description: "Busque produtos geek por fandom, tema ou linguagem natural em Manaus.",

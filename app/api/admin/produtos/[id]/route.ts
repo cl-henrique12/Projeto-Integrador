@@ -45,6 +45,11 @@ export async function PATCH(
       data: updateData,
     });
 
+    const { revalidatePath } = await import("next/cache");
+    revalidatePath("/");
+    revalidatePath("/lojas");
+    revalidatePath(`/produtos/${id}`);
+
     return NextResponse.json(updatedProduct);
   } catch (error) {
     console.error("Erro ao moderar produto:", error);

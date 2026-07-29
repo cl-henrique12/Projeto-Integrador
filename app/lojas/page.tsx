@@ -6,6 +6,8 @@ import StoreCard from "@/app/components/StoreCard";
 import Link from "next/link";
 import type { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Lojas Geek | Geekfy",
   description: "Explore todas as lojas geek de Manaus. Filtre por categoria e encontre seus produtos favoritos.",

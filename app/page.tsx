@@ -8,6 +8,9 @@ import ProductGrid from "@/app/components/ProductGrid";
 import Link from "next/link";
 import EventMapLoader from "@/app/components/EventMapLoader";
 
+// Forçar renderização dinâmica para refletir alterações no banco imediatamente (no Vercel)
+export const dynamic = "force-dynamic";
+
 // Server Component — dados buscados direto do banco via Prisma
 // design-system §3: "exatamente estes componentes, nesta ordem"
 export default async function HomePage() {

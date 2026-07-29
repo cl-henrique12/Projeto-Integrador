@@ -48,6 +48,11 @@ export async function PATCH(
       },
     });
 
+    const { revalidatePath } = await import("next/cache");
+    revalidatePath("/");
+    revalidatePath("/lojas");
+    revalidatePath(`/lojas/${updatedStore.slug}`);
+
     return NextResponse.json(updatedStore);
   } catch (error) {
     console.error("Erro ao atualizar loja:", error);
