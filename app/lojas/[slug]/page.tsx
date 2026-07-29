@@ -62,15 +62,13 @@ export default async function LojaPage({ params }: PageProps) {
 
       {/* Cover */}
       <div className="relative h-56 md:h-72 bg-gradient-to-r from-mauve/50 to-blushpop/50 overflow-hidden">
-        {loja.coverUrl && (
-          <SafeImage src={loja.coverUrl} alt={`Capa de ${loja.name}`} fill className="object-cover" priority />
-        )}
+        <SafeImage src={loja.coverUrl || ""} alt={`Capa de ${loja.name}`} fallbackType="cover" fill className="object-cover" priority />
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
       </div>
 
-      <div className="page-container">
+      <div className="page-container" style={{ paddingBottom: '64px' }}>
         {/* Cabeçalho da loja */}
-        <div className="relative -mt-12 mb-8 flex flex-col sm:flex-row sm:items-end gap-4">
+        <div className="relative -mt-12 mb-8 flex flex-col sm:flex-row sm:items-end gap-4" style={{ marginBottom: '32px' }}>
           {/* Logo */}
           <div className="w-24 h-24 rounded-full border-4 border-white bg-white overflow-hidden shadow-lg flex-shrink-0">
             <StoreLogo logoUrl={loja.logoUrl} name={loja.name} size={96} />
@@ -79,12 +77,12 @@ export default async function LojaPage({ params }: PageProps) {
           <div className="flex-1 pb-2">
             <h1 className="font-display font-black text-2xl md:text-3xl text-text-primary">{loja.name}</h1>
             {loja.neighborhood && (
-              <p className="text-lavendergrey text-sm mt-0.5">{loja.neighborhood} · {loja.city}</p>
+              <p className="text-lavendergrey text-sm" style={{ marginTop: '2px' }}>{loja.neighborhood} · {loja.city}</p>
             )}
             {/* Categorias */}
-            <div className="flex flex-wrap gap-1.5 mt-2">
+            <div className="flex flex-wrap gap-1.5" style={{ marginTop: '8px' }}>
               {loja.categories.map(({ category }) => (
-                <span key={category.id} className="px-2.5 py-0.5 rounded-full bg-aquamarine/60 text-text-primary text-xs font-semibold">
+                <span key={category.id} className="select-none px-3 py-1 rounded-full bg-aquamarine/40 text-text-primary text-xs font-semibold shadow-xs">
                   {category.name}
                 </span>
               ))}

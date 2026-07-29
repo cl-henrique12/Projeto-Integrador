@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { ImageUploader } from "@/app/components/ImageUploader";
 
 interface Categoria {
   id: string;
@@ -208,6 +209,26 @@ export default function CadastroLojaPage() {
               style={{ padding: "12px 16px" }}
             />
           </div>
+
+          {/* Logo da Loja */}
+          <ImageUploader
+            label="Logo da loja"
+            folder="lojas"
+            aspectRatio="logo"
+            value={form.logoUrl}
+            onChange={url => setForm(f => ({ ...f, logoUrl: url }))}
+            helpText="Sua marca ou avatar que aparecerá nos cards da loja (opcional)."
+          />
+
+          {/* Capa da Loja */}
+          <ImageUploader
+            label="Imagem de capa"
+            folder="lojas"
+            aspectRatio="cover"
+            value={form.coverUrl}
+            onChange={url => setForm(f => ({ ...f, coverUrl: url }))}
+            helpText="Foto do seu espaço ou banner ilustrativo para o topo da página (opcional)."
+          />
 
           {/* Categorias */}
           <div>

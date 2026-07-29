@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { ImageUploader } from "@/app/components/ImageUploader";
+
 
 interface Tag { id: string; name: string; slug: string; }
 
@@ -61,67 +63,84 @@ export default function NovoProdutoPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-aquamarine/10 via-base to-mauve/10 py-12 px-4">
-      <div className="max-w-xl mx-auto bg-white rounded-card shadow-xl p-8">
-        <div className="flex items-center gap-3 mb-6">
-          <a href="/painel" className="text-lavendergrey hover:text-text-primary transition-colors">← Painel</a>
-          <h1 className="font-display font-black text-xl text-text-primary">Novo produto</h1>
+    <main className="min-h-screen bg-gradient-to-br from-aquamarine/10 via-base to-mauve/10">
+      {/* Topo do Painel */}
+      <header className="bg-blushpop shadow-xs" style={{ padding: '16px 0' }}>
+        <div className="page-container flex items-center justify-between">
+          <a href="/painel" className="font-display font-black text-xl text-text-primary">
+            Geekfy <span className="text-text-primary/70 font-semibold text-sm">/ Painel</span>
+          </a>
+          <a href="/painel" className="text-xs font-semibold text-text-primary/80 hover:text-text-primary transition-colors">
+            ← Voltar aos meus produtos
+          </a>
         </div>
+      </header>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-          {/* Nome */}
-          <div>
-            <label htmlFor="prod-nome" className="block text-xs font-semibold text-text-primary mb-1.5">Nome do produto *</label>
-            <input id="prod-nome" type="text" required value={form.nome} onChange={e => setForm(f => ({...f, nome: e.target.value}))}
-              placeholder="Ex: Card One Piece OP-01" className="w-full px-4 py-3 rounded-card border border-lavendergrey/30 text-text-primary text-sm font-sans focus:outline-none focus:border-mauve focus:ring-2 focus:ring-mauve/20 transition-all" />
+      <div className="page-container" style={{ paddingTop: '40px', paddingBottom: '64px' }}>
+        <div className="max-w-xl mx-auto bg-white rounded-card shadow-xl" style={{ padding: '40px' }}>
+          <div className="flex items-center gap-2" style={{ marginBottom: '24px' }}>
+            <h1 className="font-display font-black text-2xl text-text-primary">Novo produto</h1>
           </div>
 
-          {/* Preço */}
-          <div>
-            <label htmlFor="prod-preco" className="block text-xs font-semibold text-text-primary mb-1.5">Preço (R$) *</label>
-            <input id="prod-preco" type="text" required value={form.preco} onChange={e => setForm(f => ({...f, preco: e.target.value}))}
-              placeholder="Ex: 45,90" className="w-full px-4 py-3 rounded-card border border-lavendergrey/30 text-text-primary text-sm font-sans focus:outline-none focus:border-mauve focus:ring-2 focus:ring-mauve/20 transition-all" />
-          </div>
-
-          {/* Descrição */}
-          <div>
-            <label htmlFor="prod-desc" className="block text-xs font-semibold text-text-primary mb-1.5">Descrição</label>
-            <textarea id="prod-desc" rows={3} value={form.descricao} onChange={e => setForm(f => ({...f, descricao: e.target.value}))}
-              placeholder="Detalhes do produto..." className="w-full px-4 py-3 rounded-card border border-lavendergrey/30 text-text-primary text-sm font-sans focus:outline-none focus:border-mauve focus:ring-2 focus:ring-mauve/20 resize-none transition-all" />
-          </div>
-
-          {/* URL da imagem */}
-          <div>
-            <label htmlFor="prod-imagem" className="block text-xs font-semibold text-text-primary mb-1.5">URL da imagem <span className="text-lavendergrey font-normal">(upload via Supabase Storage em breve)</span></label>
-            <input id="prod-imagem" type="url" value={form.imagemUrl} onChange={e => setForm(f => ({...f, imagemUrl: e.target.value}))}
-              placeholder="https://..." className="w-full px-4 py-3 rounded-card border border-lavendergrey/30 text-text-primary text-sm font-sans focus:outline-none focus:border-mauve focus:ring-2 focus:ring-mauve/20 transition-all" />
-          </div>
-
-          {/* Tags de fandom */}
-          <div>
-            <p className="text-xs font-semibold text-text-primary mb-2">Tags de fandom / tema</p>
-            <div className="flex flex-wrap gap-2">
-              {tags.map(tag => (
-                <button key={tag.id} type="button" onClick={() => toggleTag(tag.id)}
-                  className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-all ${tagsSelecionadas.includes(tag.id) ? "bg-aquamarine text-text-primary shadow" : "bg-lavendergrey/10 text-lavendergrey hover:bg-aquamarine/30"}`}>
-                  {tag.name}
-                </button>
-              ))}
-              {tags.length === 0 && <p className="text-lavendergrey text-xs">Carregando tags...</p>}
+          <form onSubmit={handleSubmit} className="flex flex-col" style={{ gap: '20px' }}>
+            {/* Nome */}
+            <div>
+              <label htmlFor="prod-nome" className="block text-xs font-semibold text-text-primary" style={{ marginBottom: '6px' }}>Nome do produto *</label>
+              <input id="prod-nome" type="text" required value={form.nome} onChange={e => setForm(f => ({...f, nome: e.target.value}))}
+                placeholder="Ex: Card One Piece OP-01" className="w-full rounded-card border border-lavendergrey/30 text-text-primary text-sm font-sans focus:outline-none focus:border-mauve focus:ring-2 focus:ring-mauve/20 transition-all" style={{ padding: '12px 16px' }} />
             </div>
-          </div>
 
-          {erro && (
-            <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3">
-              <p className="text-red-600 text-sm font-sans">{erro}</p>
+            {/* Preço */}
+            <div>
+              <label htmlFor="prod-preco" className="block text-xs font-semibold text-text-primary" style={{ marginBottom: '6px' }}>Preço (R$) *</label>
+              <input id="prod-preco" type="text" required value={form.preco} onChange={e => setForm(f => ({...f, preco: e.target.value}))}
+                placeholder="Ex: 45,90" className="w-full rounded-card border border-lavendergrey/30 text-text-primary text-sm font-sans focus:outline-none focus:border-mauve focus:ring-2 focus:ring-mauve/20 transition-all" style={{ padding: '12px 16px' }} />
             </div>
-          )}
 
-          <button id="btn-criar-produto" type="submit" disabled={carregando}
-            className="bg-mauve text-text-primary py-3.5 rounded-full font-bold text-sm hover:bg-blushpop transition-colors shadow-md disabled:opacity-60">
-            {carregando ? "Salvando..." : "Salvar produto →"}
-          </button>
-        </form>
+            {/* Descrição */}
+            <div>
+              <label htmlFor="prod-desc" className="block text-xs font-semibold text-text-primary" style={{ marginBottom: '6px' }}>Descrição</label>
+              <textarea id="prod-desc" rows={3} value={form.descricao} onChange={e => setForm(f => ({...f, descricao: e.target.value}))}
+                placeholder="Detalhes do produto..." className="w-full rounded-card border border-lavendergrey/30 text-text-primary text-sm font-sans focus:outline-none focus:border-mauve focus:ring-2 focus:ring-mauve/20 resize-none transition-all" style={{ padding: '12px 16px' }} />
+            </div>
+
+            {/* Imagem do produto */}
+            <ImageUploader
+              label="Imagem do produto"
+              folder="produtos"
+              value={form.imagemUrl}
+              onChange={url => setForm(f => ({ ...f, imagemUrl: url }))}
+              helpText="Envie uma imagem em boa resolução para destacar seu produto no catálogo."
+            />
+
+            {/* Tags de fandom */}
+            <div>
+              <p className="text-xs font-semibold text-text-primary" style={{ marginBottom: '8px' }}>Tags de fandom / tema</p>
+              <div className="flex flex-wrap" style={{ gap: '8px' }}>
+                {tags.map(tag => (
+                  <button key={tag.id} type="button" onClick={() => toggleTag(tag.id)}
+                    className={`rounded-full text-sm font-semibold transition-all ${tagsSelecionadas.includes(tag.id) ? "bg-aquamarine text-text-primary shadow-xs" : "bg-lavendergrey/10 text-lavendergrey hover:bg-aquamarine/30"}`}
+                    style={{ padding: '6px 14px' }}>
+                    {tag.name}
+                  </button>
+                ))}
+                {tags.length === 0 && <p className="text-lavendergrey text-xs">Carregando tags...</p>}
+              </div>
+            </div>
+
+            {erro && (
+              <div className="bg-red-50 border border-red-200 rounded-lg" style={{ padding: '12px 16px' }}>
+                <p className="text-red-600 text-sm font-sans">{erro}</p>
+              </div>
+            )}
+
+            <button id="btn-criar-produto" type="submit" disabled={carregando}
+              className="bg-aquamarine text-text-primary rounded-full font-bold text-sm hover:bg-aquamarine/80 transition-colors shadow-md disabled:opacity-60 cursor-pointer"
+              style={{ padding: '14px 24px', marginTop: '12px' }}>
+              {carregando ? "Salvando..." : "Salvar produto →"}
+            </button>
+          </form>
+        </div>
       </div>
     </main>
   );

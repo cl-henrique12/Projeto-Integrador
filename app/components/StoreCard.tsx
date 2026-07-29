@@ -168,18 +168,17 @@ export default function StoreCard({
         onMouseEnter={() => setCoverHovered(true)}
         onMouseLeave={() => setCoverHovered(false)}
       >
-        {coverUrl && (
-          <SafeImage
-            src={coverUrl}
-            alt=""
-            fill
-            style={{
-              objectFit:  "cover",
-              transition: "transform 0.5s ease",
-              transform:  coverHovered ? "scale(1.05)" : "scale(1)",
-            }}
-          />
-        )}
+        <SafeImage
+          src={coverUrl || ""}
+          alt={name}
+          fallbackType="cover"
+          fill
+          style={{
+            objectFit:  "cover",
+            transition: "transform 0.5s ease",
+            transform:  coverHovered ? "scale(1.05)" : "scale(1)",
+          }}
+        />
 
         {/* Avatar circular sobreposto na borda inferior da capa */}
         <div style={avatarWrapperStyle}>

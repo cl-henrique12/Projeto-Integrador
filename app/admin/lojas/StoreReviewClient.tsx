@@ -21,7 +21,7 @@ interface StoreData {
   neighborhood: string | null;
   city: string;
   status: "PENDING" | "APPROVED" | "REJECTED" | "SUSPENDED";
-  rejectionReason: string | null;
+  rejectionReason?: string | null;
   createdAt: string;
   owner: {
     name: string;

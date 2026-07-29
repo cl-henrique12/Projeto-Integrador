@@ -67,3 +67,40 @@ export async function POST(request: NextRequest) {
 
   return NextResponse.json({ success: true, slug: loja.slug }, { status: 201 });
 }
+
+export async function PUT(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { storeId, nome, descricao, whatsapp, instagram, bairro, logoUrl, coverUrl, ownerEmail } = body;
+
+    if (!storeId || !ownerEmail) {
+      return NextResponse.json({ error: "Parâmetros inválidos." }, { status: 400 });
+    }
+
+    const loja = await prisma.store.findFirst({
+      where: { id: storeId, owner: { email: ownerEmail } },
+    });
+
+    if (!loja) {
+      return NextResponse.json({ error: "Loja não encontrada ou permissão negada." }, { status: 404 });
+    }
+
+    const updatedStore = await prisma.store.update({
+      where: { id: storeId },
+      data: {
+        name: nome ?? loja.name,
+        description: descricao !== undefined ? descricao : loja.description,
+        whatsapp: whatsapp ? whatsapp.replace(/\D/g, "") : loja.whatsapp,
+        instagram: instagram !== undefined ? instagram : loja.instagram,
+        neighborhood: bairro !== undefined ? bairro : loja.neighborhood,
+        logoUrl: logoUrl !== undefined ? logoUrl : loja.logoUrl,
+        coverUrl: coverUrl !== undefined ? coverUrl : loja.coverUrl,
+      },
+    });
+
+    return NextResponse.json({ success: true, store: updatedStore });
+  } catch (error: any) {
+    return NextResponse.json({ error: error?.message || "Erro ao atualizar a loja." }, { status: 500 });
+  }
+}
+

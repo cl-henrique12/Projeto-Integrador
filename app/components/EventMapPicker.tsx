@@ -21,7 +21,7 @@ interface LocationPickerProps {
 
 function LocationMarker({ onSelect, lat, lng }: { onSelect: (lat: number, lng: number) => void; lat: number; lng: number }) {
   useMapEvents({
-    click(e) {
+    click(e: any) {
       onSelect(e.latlng.lat, e.latlng.lng);
     },
   });

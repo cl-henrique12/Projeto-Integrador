@@ -52,6 +52,17 @@ export default async function ProdutoPage({ params }: PageProps) {
   // Incrementar views (fire-and-forget)
   prisma.product.update({ where: { id }, data: { viewsCount: { increment: 1 } } }).catch(() => {});
 
+  // Outros produtos da mesma loja
+  const outrosProdutos = await prisma.product.findMany({
+    where: {
+      storeId: produto.store.id,
+      status: ProductStatus.ACTIVE,
+      id: { not: produto.id },
+    },
+    include: { images: { orderBy: { order: "asc" }, take: 1 } },
+    take: 4,
+  });
+
   const preco = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(Number(produto.price));
 
   // Mensagem pré-preenchida para o WhatsApp — RF15
@@ -65,16 +76,16 @@ export default async function ProdutoPage({ params }: PageProps) {
       <Header />
       <CategoryNav />
 
-      <div className="page-container py-section pt-16">
+      <div className="page-container py-section" style={{ paddingTop: '32px', paddingBottom: '64px' }}>
         {/* Breadcrumb */}
-        <nav className="text-xs text-lavendergrey mb-6 font-sans" aria-label="Breadcrumb">
+        <nav className="text-xs text-lavendergrey mb-6 font-sans" aria-label="Breadcrumb" style={{ marginBottom: '24px' }}>
           <Link href="/" className="hover:text-text-primary transition-colors">Início</Link>
           {" / "}
           <Link href="/lojas" className="hover:text-text-primary transition-colors">Lojas</Link>
           {" / "}
           <Link href={`/lojas/${produto.store.slug}`} className="hover:text-text-primary transition-colors">{produto.store.name}</Link>
           {" / "}
-          <span className="text-text-primary">{produto.name}</span>
+          <span className="text-text-primary font-semibold">{produto.name}</span>
         </nav>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -102,8 +113,8 @@ export default async function ProdutoPage({ params }: PageProps) {
                 )}
               </div>
             ) : (
-              <div className="h-80 rounded-card bg-gradient-to-br from-aquamarine/20 to-mauve/20 flex items-center justify-center">
-                <span className="text-lavendergrey text-sm">Sem imagem</span>
+              <div className="relative h-80 rounded-card overflow-hidden bg-gradient-to-br from-aquamarine/20 to-mauve/20">
+                <SafeImage src="" alt={produto.name} fallbackType="product" fill className="object-contain" />
               </div>
             )}
           </div>
@@ -173,6 +184,39 @@ export default async function ProdutoPage({ params }: PageProps) {
             </Link>
           </div>
         </div>
+
+        {/* Outros produtos da loja */}
+        {outrosProdutos.length > 0 && (
+          <div style={{ marginTop: '56px' }}>
+            <h2 className="font-display font-bold text-xl text-text-primary mb-5" style={{ marginBottom: '20px' }}>
+              Mais da loja {produto.store.name}
+            </h2>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
+              {outrosProdutos.map((item) => {
+                const img = item.images[0];
+                const itemPreco = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(Number(item.price));
+                return (
+                  <li key={item.id}>
+                    <Link
+                      href={`/produtos/${item.id}`}
+                      className="block rounded-card overflow-hidden bg-white shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 transform border border-lavendergrey/10 group"
+                    >
+                      <div className="relative h-40 bg-gradient-to-br from-aquamarine/20 to-mauve/20">
+                        <SafeImage src={img?.url || ""} alt={item.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                      </div>
+                      <div style={{ padding: '12px' }}>
+                        <h3 className="font-display font-semibold text-xs text-text-primary truncate">{item.name}</h3>
+                        <p className="font-display font-black text-sm text-text-primary" style={{ marginTop: '4px' }}>
+                          {itemPreco}
+                        </p>
+                      </div>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
       </div>
     </main>
   );
